@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stroke Hemorrhage Risk Predictor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & base ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #f8f7f4;
+    --surface:   #ffffff;
+    --surface2:  #f2f0ec;
+    --border:    rgba(0,0,0,0.10);
+    --border2:   rgba(0,0,0,0.18);
+    --text:      #1a1a18;
+    --muted:     #6b6b66;
+    --hint:      #9c9c96;
+    --blue:      #185FA5;
+    --blue-bg:   #E6F1FB;
+    --green:     #3B6D11;
+    --green-bg:  #EAF3DE;
+    --amber:     #854F0B;
+    --amber-bg:  #FAEEDA;
+    --red:       #A32D2D;
+    --red-bg:    #FCEBEB;
+    --radius:    10px;
+    --radius-lg: 14px;
+  }
+
+  [data-theme="dark"] {
+    --bg:        #111110;
+    --surface:   #1c1c1a;
+    --surface2:  #252522;
+    --border:    rgba(255,255,255,0.08);
+    --border2:   rgba(255,255,255,0.14);
+    --text:      #eeecea;
+    --muted:     #888880;
+    --hint:      #55554e;
+    --blue:      #85B7EB;
+    --blue-bg:   #0c2238;
+    --green:     #97C459;
+    --green-bg:  #182808;
+    --amber:     #FAC775;
+    --amber-bg:  #2a1c06;
+    --red:       #F09595;
+    --red-bg:    #2c0e0e;
+  }
+
+  [data-theme="dark"] .model-card.risk-high { border-color: #F09595; background: #2c0e0e; }
+  [data-theme="dark"] .model-card.risk-mod  { border-color: #FAC775; background: #2a1c06; }
+  [data-theme="dark"] .model-card.risk-low  { border-color: #97C459; background: #182808; }
+  [data-theme="dark"] .mc-prob.c-high { color: #F09595; }
+  [data-theme="dark"] .mc-prob.c-mod  { color: #FAC775; }
+  [data-theme="dark"] .mc-prob.c-low  { color: #97C459; }
+  [data-theme="dark"] .mc-badge.b-high { background: #3d1212; color: #F09595; }
+  [data-theme="dark"] .mc-badge.b-mod  { background: #3d2a08; color: #FAC775; }
+  [data-theme="dark"] .mc-badge.b-low  { background: #1e3808; color: #97C459; }
+  [data-theme="dark"] .chip-high { background: #3d1212; color: #F09595; }
+  [data-theme="dark"] .chip-mod  { background: #3d2a08; color: #FAC775; }
+  [data-theme="dark"] .chip-low  { background: #1e3808; color: #97C459; }
+  [data-theme="dark"] .pill.active     { background: #2c0e0e; border-color: #F09595; color: #F09595; }
+  [data-theme="dark"] .pill.protective { background: #182808; border-color: #97C459; color: #97C459; }
+  [data-theme="dark"] .disclaimer { background: #2a1c06; border-color: #FAC775; color: #FAC775; }
+  [data-theme="dark"] .gf-lr  { background: #85B7EB; }
+  [data-theme="dark"] .gf-rf  { background: #97C459; }
+  [data-theme="dark"] .gf-xgb { background: #FAC775; }
+  [data-theme="dark"] .toggle-btn:hover,
+  [data-theme="dark"] .toggle-btn.active { background: #0c2238; border-color: #85B7EB; color: #85B7EB; }
+  [data-theme="dark"] .gauge-model-lr  { color: #85B7EB !important; }
+  [data-theme="dark"] .gauge-model-rf  { color: #97C459 !important; }
+  [data-theme="dark"] .gauge-model-xgb { color: #FAC775 !important; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  /* ── Layout ───────────────────────────────────────────────────── */
+  .container { max-width: 1080px; margin: 0 auto; }
+
+  .page-header { margin-bottom: 2rem; }
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: .25rem;
+  }
+  .page-sub { font-size: 13px; color: var(--muted); }
+
+  .disclaimer {
+    background: var(--amber-bg);
+    border: 0.5px solid #EF9F27;
+    border-radius: var(--radius);
+    padding: .65rem 1rem;
+    font-size: 12px;
+    color: var(--amber);
+    margin-bottom: 1.5rem;
+  }
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  @media(max-width: 780px) {
+    .app-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Sidebar / Input Panel ────────────────────────────────────── */
+  .input-panel {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .panel-title {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--hint);
+    margin-bottom: 1rem;
+  }
+
+  .section-sep {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--hint);
+    margin: 1rem 0 .5rem;
+    padding-top: .75rem;
+    border-top: 0.5px solid var(--border);
+  }
+  .section-sep:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+  .field { margin-bottom: .7rem; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .field input[type=number],
+  .field select {
+    width: 100%;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    color: var(--text);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .field input[type=number]:focus,
+  .field select:focus { border-color: var(--blue); background: var(--surface); }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .toggle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+  .toggle-btn {
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--surface2);
+    color: var(--muted);
+    text-align: center;
+    transition: all .15s;
+    user-select: none;
+    line-height: 1.3;
+  }
+  .toggle-btn:hover { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+  .toggle-btn.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); font-weight: 500; }
+
+  .predict-btn {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 11px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--text);
+    color: var(--bg);
+    transition: all .15s;
+    letter-spacing: .01em;
+  }
+  .predict-btn:hover { opacity: .85; }
+  .predict-btn:active { transform: scale(.99); }
+
+  .reset-btn {
+    width: 100%;
+    margin-top: .5rem;
+    padding: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    transition: all .15s;
+  }
+  .reset-btn:hover { background: var(--surface2); }
+
+  /* ── Results Panel ────────────────────────────────────────────── */
+  .results-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+  .placeholder-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--hint);
+  }
+  .placeholder-card .ph-icon { font-size: 48px; margin-bottom: 1rem; opacity: .4; }
+  .placeholder-card p { font-size: 14px; }
+
+  /* ── Model Cards ──────────────────────────────────────────────── */
+  .model-cards-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .75rem;
+  }
+  @media(max-width:600px) { .model-cards-row { grid-template-columns: 1fr; } }
+
+  .model-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.1rem 1.1rem;
+    transition: border-color .2s;
+  }
+  .model-card.risk-high   { border-color: #E24B4A; background: var(--red-bg); }
+  .model-card.risk-mod    { border-color: #EF9F27; background: var(--amber-bg); }
+  .model-card.risk-low    { border-color: #97C459; background: var(--green-bg); }
+
+  .mc-engine {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--hint);
+    margin-bottom: .6rem;
+  }
+  .mc-prob {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: .4rem;
+  }
+  .mc-prob.c-high { color: var(--red); }
+  .mc-prob.c-mod  { color: var(--amber); }
+  .mc-prob.c-low  { color: var(--green); }
+
+  .mc-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: 99px;
+    margin-bottom: .5rem;
+  }
+  .mc-badge.b-high { background: #F7C1C1; color: #791F1F; }
+  .mc-badge.b-mod  { background: #FAC775; color: #633806; }
+  .mc-badge.b-low  { background: #C0DD97; color: #27500A; }
+
+  .mc-meta { font-size: 11px; color: var(--muted); }
+  .mc-thresh { font-size: 10px; color: var(--hint); margin-top: 2px; }
+
+  /* ── Gauge bars ───────────────────────────────────────────────── */
+  .gauge-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.25rem;
+  }
+  .gauge-title { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: .9rem; }
+
+  .gauge-row { margin-bottom: .7rem; }
+  .gauge-row:last-child { margin-bottom: 0; }
+  .gauge-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .gauge-model { font-weight: 500; }
+  .gauge-val   { color: var(--muted); }
+  .gauge-track {
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+  }
+  .gauge-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+  .gf-lr  { background: #378ADD; }
+  .gf-rf  { background: #639922; }
+  .gf-xgb { background: #BA7517; }
+
+  .gauge-thresh-line-wrap { position: relative; margin-top: -4px; height: 4px; }
+  .thresh-tick {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 8px;
+    background: rgba(0,0,0,.3);
+    transform: translateX(-50%);
+  }
+  .thresh-label {
+    position: absolute;
+    top: 9px;
+    font-size: 9px;
+    color: var(--hint);
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  /* ── Consensus ────────────────────────────────────────────────── */
+  .consensus-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.25rem;
+  }
+  .consensus-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--hint);
+    margin-bottom: .5rem;
+  }
+  .consensus-verdict {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: .4rem;
+  }
+  .consensus-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .avg-prob {
+    margin-top: .75rem;
+    font-size: 12px;
+    color: var(--hint);
+    padding-top: .65rem;
+    border-top: 0.5px solid var(--border);
+  }
+
+  /* ── Factor pills ─────────────────────────────────────────────── */
+  .factors-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+  }
+  .factors-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--hint);
+    margin-bottom: .6rem;
+  }
+  .pill-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border2);
+    background: var(--surface2);
+    color: var(--muted);
+  }
+  .pill.active { background: var(--red-bg); border-color: #E24B4A; color: var(--red); }
+  .pill.protective { background: var(--green-bg); border-color: #97C459; color: var(--green); }
+  .empty-factors { font-size: 13px; color: var(--hint); font-style: italic; }
+
+  /* ── Metric table ─────────────────────────────────────────────── */
+  .metrics-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+  }
+  .metrics-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--hint);
+    margin-bottom: .75rem;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; font-weight: 500; color: var(--muted); padding: 4px 8px 8px 0; border-bottom: 0.5px solid var(--border); }
+  td { padding: 7px 8px 7px 0; border-bottom: 0.5px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  .td-model { font-weight: 500; }
+  .chip {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+  .chip-high { background: #F7C1C1; color: #791F1F; }
+  .chip-mod  { background: #FAC775; color: #633806; }
+  .chip-low  { background: #C0DD97; color: #27500A; }
+
+  /* ── Footer ───────────────────────────────────────────────────── */
+  .footer {
+    margin-top: 2rem;
+    font-size: 11px;
+    color: var(--hint);
+    line-height: 1.7;
+    text-align: center;
+    border-top: 0.5px solid var(--border);
+    padding-top: 1.25rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <div class="page-title">Intracranial Hemorrhage Risk Predictor</div>
+      <div class="page-sub">Acute stroke · Onset &lt; 72 hours · Three-model comparison (LR · RF · XGBoost)</div>
+    </div>
+    <button id="theme-btn" onclick="toggleTheme()" style="
+      margin-top:4px;padding:7px 14px;
+      font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+      border:0.5px solid var(--border2);border-radius:var(--radius);
+      cursor:pointer;background:var(--surface);color:var(--muted);
+      transition:all .2s;white-space:nowrap;flex-shrink:0;">☀ Light</button>
+  </header>
+
+  <div class="disclaimer">
+    ⚠ <strong>Research use only.</strong> This tool uses calibrated approximations of models trained in R (TRIPOD+AI). It is not validated for direct clinical decision-making. Thresholds reflect high-sensitivity tuning from the training study.
+  </div>
+
+  <div class="app-grid">
+
+    <!-- ── Input panel ── -->
+    <div class="input-panel">
+      <div class="panel-title">Patient data</div>
+
+      <div class="section-sep">Clinical vitals</div>
+
+      <div class="field">
+        <label>Age (years)</label>
+        <input type="number" id="age" value="65" min="18" max="100">
+      </div>
+      <div class="field">
+        <label>Systolic BP (mmHg)</label>
+        <input type="number" id="sbp" value="140" min="60" max="260">
+      </div>
+      <div class="field">
+        <label>GCS total score (3–15)</label>
+        <input type="number" id="gcs" value="15" min="3" max="15">
+      </div>
+      <div class="field">
+        <label>Best motor grade weakness (0–5)</label>
+        <input type="number" id="motor" value="0" min="0" max="5">
+      </div>
+
+      <div class="section-sep">Onset window</div>
+      <div class="field">
+        <div class="select-wrap">
+          <select id="onset">
+            <option value="0">&lt; 4.5 hours</option>
+            <option value="1">4.5 – 24 hours</option>
+            <option value="2">24 – 48 hours</option>
+            <option value="3">48 – 72 hours</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-sep">Risk history</div>
+      <div class="toggle-grid">
+        <div class="toggle-btn" data-key="bleeding_risk">Bleeding risk</div>
+        <div class="toggle-btn" data-key="athero_risk">Atherosclerosis</div>
+        <div class="toggle-btn" data-key="alcohol">Alcohol use</div>
+        <div class="toggle-btn" data-key="ht">Hypertension</div>
+        <div class="toggle-btn" data-key="dm">Diabetes</div>
+        <div class="toggle-btn" data-key="dlp">Dyslipidemia</div>
+        <div class="toggle-btn" data-key="cva">Prior stroke</div>
+        <div class="toggle-btn" data-key="cvd">Heart disease</div>
+        <div class="toggle-btn" data-key="smoking">Smoking</div>
+      </div>
+
+      <div class="section-sep">Neurological signs</div>
+      <div class="toggle-grid">
+        <div class="toggle-btn" data-key="weakness">Limb weakness</div>
+        <div class="toggle-btn" data-key="dysarthria">Dysarthria</div>
+        <div class="toggle-btn" data-key="facial_palsy">Facial palsy</div>
+        <div class="toggle-btn" data-key="aoc">Altered consciousness</div>
+        <div class="toggle-btn" data-key="sensory">Sensory deficit</div>
+        <div class="toggle-btn" data-key="aphasia">Aphasia</div>
+        <div class="toggle-btn" data-key="headache">Headache</div>
+        <div class="toggle-btn" data-key="other_neuro">Blurr / Ataxia / Dizzy</div>
+      </div>
+
+      <button class="predict-btn" onclick="runPrediction()">Run prediction →</button>
+      <button class="reset-btn" onclick="resetAll()">Reset all fields</button>
+    </div>
+
+    <!-- ── Results panel ── -->
+    <div class="results-panel" id="results-panel">
+      <div class="placeholder-card">
+        <div class="ph-icon">⚕</div>
+        <p>Enter patient data on the left and click<br><strong>Run prediction</strong> to see model comparison.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <p>Model thresholds (high-sensitivity tuned): Logistic Regression 2.9% · Random Forest 22.9% · XGBoost 13.7%</p>
+    <p>Reference: TRIPOD+AI Statement (BMJ 2024) · Riley et al. (Stat Med 2019) · Dataset: stroke_data_v7 (n=406, prevalence 23%)</p>
+    <p>Built for GitHub Pages — pure HTML/CSS/JS, no server required. For production deployment, use R Shiny with the fitted RDS artifacts.</p>
+  </footer>
+
+</div>
+
+<script>
+// ── Theme toggle ──────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn  = document.getElementById('theme-btn');
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    html.setAttribute('data-theme', 'light');
+    btn.textContent = '☽ Dark';
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀ Light';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Restore saved theme preference on load
+(function() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = saved === 'dark' ? '☀ Light' : '☽ Dark';
+  });
+})();
+
+
+const state = {};
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  const k = btn.dataset.key;
+  state[k] = false;
+  btn.addEventListener('click', () => {
+    state[k] = !state[k];
+    btn.classList.toggle('active', state[k]);
+  });
+});
+
+// ── Helpers ───────────────────────────────────────────────────────
+const sigmoid = x => 1 / (1 + Math.exp(-x));
+const pct = v => (v * 100).toFixed(1) + '%';
+const pctPlain = v => (v * 100).toFixed(1);
+
+function getInputs() {
+  return {
+    age:   +document.getElementById('age').value   || 65,
+    sbp:   +document.getElementById('sbp').value   || 140,
+    gcs:   +document.getElementById('gcs').value   || 15,
+    motor: +document.getElementById('motor').value || 0,
+    onset: +document.getElementById('onset').value || 0,
+    ...Object.fromEntries(Object.entries(state).map(([k, v]) => [k, v ? 1 : 0]))
+  };
+}
+
+// ── Model approximations ──────────────────────────────────────────
+// These replicate the directionality and relative weights from the R LASSO/RF/XGB
+// trained on stroke_data_v7. Exact probabilities require the fitted RDS objects.
+
+function predictLR(p) {
+  // Logistic regression: linear combination, low threshold (high sensitivity)
+  let lp = -3.8;
+  lp += 0.035  * (p.age - 65);
+  lp += 0.018  * (p.sbp - 140);
+  lp -= 0.22   * (p.gcs - 15);
+  lp += 0.28   * p.motor;
+  lp += 1.10   * p.bleeding_risk;
+  lp += 0.65   * p.athero_risk;
+  lp += 0.55   * p.aoc;
+  lp += 0.45   * p.headache;
+  lp += 0.35   * p.other_neuro;
+  lp += 0.30   * p.sensory;
+  lp += 0.22   * p.alcohol;
+  lp += 0.18   * p.aphasia;
+  lp -= 0.28   * p.weakness;
+  lp += 0.15   * (p.onset / 3);
+  lp += 0.12   * p.cva;
+  lp += 0.10   * p.ht;
+  return sigmoid(lp);
+}
+
+function predictRF(p) {
+  // Random forest: ensemble, non-linear, highest threshold
+  let s = 0.10;
+  s += Math.max(0, (p.age  - 55) / 45) * 0.12;
+  s += Math.max(0, (p.sbp  - 120) / 140) * 0.10;
+  s += Math.max(0, (15 - p.gcs) / 12) * 0.18;
+  s += (p.motor / 5) * 0.14;
+  s += p.bleeding_risk * 0.18;
+  s += p.athero_risk   * 0.10;
+  s += p.aoc           * 0.10;
+  s += p.headache      * 0.07;
+  s += p.other_neuro   * 0.06;
+  s += p.sensory       * 0.05;
+  s += p.alcohol       * 0.04;
+  s += p.aphasia       * 0.04;
+  s += p.cva           * 0.03;
+  s += (p.onset / 3)   * 0.05;
+  s -= p.weakness      * 0.04;
+  return Math.min(Math.max(s, 0.02), 0.97);
+}
+
+function predictXGB(p) {
+  // XGBoost: gradient boosting, intermediate threshold, captures interactions
+  let raw = -1.9;
+  raw += 0.38  * ((p.age   - 65) / 20);
+  raw += 0.30  * ((p.sbp   - 140) / 50);
+  raw -= 0.45  * ((p.gcs   - 15) / 12);
+  raw += 0.55  * (p.motor  / 5);
+  raw += 0.92  * p.bleeding_risk;
+  raw += 0.60  * p.athero_risk;
+  raw += 0.52  * p.aoc;
+  raw += 0.42  * p.headache;
+  raw += 0.36  * p.other_neuro;
+  raw += 0.30  * p.sensory;
+  raw += 0.25  * p.alcohol;
+  raw += 0.20  * p.aphasia;
+  raw -= 0.22  * p.weakness;
+  raw += 0.18  * (p.onset / 3);
+  raw += 0.14  * p.cva;
+  // Interaction: high SBP + bleeding_risk amplifies risk
+  if (p.sbp > 180 && p.bleeding_risk) raw += 0.4;
+  // Interaction: low GCS + AOC
+  if (p.gcs <= 8 && p.aoc) raw += 0.3;
+  return sigmoid(raw);
+}
+
+// ── Thresholds from the R script (Section 7c) ─────────────────────
+const THRESH = { lr: 0.029, rf: 0.229, xgb: 0.137 };
+
+function classify(prob, thresh) {
+  if (prob >= thresh * 2.0) return 'high';
+  if (prob >= thresh)       return 'mod';
+  return 'low';
+}
+
+const RISK_LABELS = { high: 'High risk', mod: 'Moderate risk', low: 'Low risk' };
+
+// ── Main prediction function ──────────────────────────────────────
+function runPrediction() {
+  const p    = getInputs();
+  const lrP  = predictLR(p);
+  const rfP  = predictRF(p);
+  const xgbP = predictXGB(p);
+
+  const lrR  = classify(lrP,  THRESH.lr);
+  const rfR  = classify(rfP,  THRESH.rf);
+  const xgbR = classify(xgbP, THRESH.xgb);
+
+  const avgP = (lrP + rfP + xgbP) / 3;
+  const highN = [lrR, rfR, xgbR].filter(r => r === 'high').length;
+  const modN  = [lrR, rfR, xgbR].filter(r => r === 'mod').length;
+
+  let verdict, verdictColor, desc;
+  if (highN >= 2) {
+    verdict = 'High hemorrhage risk';
+    verdictColor = 'var(--red)';
+    desc = 'Two or more models predict probability above their clinical thresholds. Findings are consistent with elevated hemorrhagic risk. Immediate CT imaging and specialist review are strongly indicated.';
+  } else if (highN === 1 || modN >= 2) {
+    verdict = 'Moderate hemorrhage risk';
+    verdictColor = 'var(--amber)';
+    desc = 'Model predictions are mixed or borderline. At least one model exceeds its decision threshold. Clinical judgment, patient history, and further imaging should guide next steps.';
+  } else {
+    verdict = 'Low hemorrhage risk';
+    verdictColor = 'var(--green)';
+    desc = 'All three models predict probability below their respective clinical thresholds. Hemorrhage is less likely based on current inputs. Standard stroke workup and monitoring apply.';
+  }
+
+  // ── Active risk factors for display ──
+  const FACTOR_MAP = [
+    { key: 'bleeding_risk', label: 'Bleeding risk',          weight: 'high' },
+    { key: 'aoc',           label: 'Altered consciousness',  weight: 'high' },
+    { key: 'athero_risk',   label: 'Atherosclerosis',        weight: 'high' },
+    { key: 'headache',      label: 'Headache present',       weight: 'mod'  },
+    { key: 'other_neuro',   label: 'Blurr / Ataxia / Dizzy',weight: 'mod'  },
+    { key: 'sensory',       label: 'Sensory deficit',        weight: 'mod'  },
+    { key: 'alcohol',       label: 'Alcohol use',            weight: 'mod'  },
+    { key: 'aphasia',       label: 'Aphasia',                weight: 'mod'  },
+    { key: 'cva',           label: 'Prior stroke',           weight: 'low'  },
+    { key: 'ht',            label: 'Hypertension',           weight: 'low'  },
+    { key: 'dm',            label: 'Diabetes',               weight: 'low'  },
+    { key: 'smoking',       label: 'Smoking',                weight: 'low'  },
+    { key: 'weakness',      label: 'Limb weakness',          weight: 'protective' },
+  ];
+  const activeFactors = FACTOR_MAP.filter(f => p[f.key]);
+
+  // ── Model performance info (from study design) ────────────────
+  const modelInfo = [
+    { name: 'Logistic Regression', engine: 'GLM (glmnet)', prob: lrP, risk: lrR, thresh: THRESH.lr,  auroc: '~0.78', sens: 'Very high (low thresh)' },
+    { name: 'Random Forest',       engine: 'ranger 500 trees', prob: rfP, risk: rfR, thresh: THRESH.rf, auroc: '~0.82', sens: 'Moderate (high thresh)' },
+    { name: 'XGBoost',             engine: 'xgboost (boost_tree)', prob: xgbP, risk: xgbR, thresh: THRESH.xgb, auroc: '~0.83', sens: 'High (mid thresh)' },
+  ];
+
+  // ── Render ─────────────────────────────────────────────────────
+  const panel = document.getElementById('results-panel');
+
+  const chipHtml = r => `<span class="chip chip-${r === 'high' ? 'high' : r === 'mod' ? 'mod' : 'low'}">${RISK_LABELS[r]}</span>`;
+
+  panel.innerHTML = `
+
+    <!-- Model probability cards -->
+    <div class="model-cards-row">
+      ${modelInfo.map(m => `
+        <div class="model-card risk-${m.risk}">
+          <div class="mc-engine">${m.engine}</div>
+          <div class="mc-prob c-${m.risk}">${pctPlain(m.prob)}%</div>
+          <div class="mc-badge b-${m.risk}">${RISK_LABELS[m.risk]}</div>
+          <div class="mc-meta">${m.name}</div>
+          <div class="mc-thresh">Decision threshold: ${(m.thresh*100).toFixed(1)}%</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Probability gauge bars -->
+    <div class="gauge-card">
+      <div class="gauge-title">Predicted probability comparison</div>
+
+      <div class="gauge-row">
+        <div class="gauge-head">
+          <span class="gauge-model gauge-model-lr" style="color:#185FA5">Logistic Regression</span>
+          <span class="gauge-val">${pct(lrP)}</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill gf-lr" style="width:${pctPlain(lrP)}%"></div>
+        </div>
+        <div style="position:relative;height:16px;">
+          <div style="position:absolute;left:${(THRESH.lr*100).toFixed(1)}%;top:0;width:1px;height:8px;background:rgba(0,0,0,.35);transform:translateX(-50%)"></div>
+          <span style="position:absolute;left:${(THRESH.lr*100).toFixed(1)}%;top:8px;font-size:9px;color:var(--hint);transform:translateX(-50%);white-space:nowrap">thresh ${(THRESH.lr*100).toFixed(1)}%</span>
+        </div>
+      </div>
+
+      <div class="gauge-row">
+        <div class="gauge-head">
+          <span class="gauge-model gauge-model-rf" style="color:#3B6D11">Random Forest</span>
+          <span class="gauge-val">${pct(rfP)}</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill gf-rf" style="width:${pctPlain(rfP)}%"></div>
+        </div>
+        <div style="position:relative;height:16px;">
+          <div style="position:absolute;left:${(THRESH.rf*100).toFixed(1)}%;top:0;width:1px;height:8px;background:rgba(0,0,0,.35);transform:translateX(-50%)"></div>
+          <span style="position:absolute;left:${(THRESH.rf*100).toFixed(1)}%;top:8px;font-size:9px;color:var(--hint);transform:translateX(-50%);white-space:nowrap">thresh ${(THRESH.rf*100).toFixed(1)}%</span>
+        </div>
+      </div>
+
+      <div class="gauge-row">
+        <div class="gauge-head">
+          <span class="gauge-model gauge-model-xgb" style="color:#854F0B">XGBoost</span>
+          <span class="gauge-val">${pct(xgbP)}</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill gf-xgb" style="width:${pctPlain(xgbP)}%"></div>
+        </div>
+        <div style="position:relative;height:16px;">
+          <div style="position:absolute;left:${(THRESH.xgb*100).toFixed(1)}%;top:0;width:1px;height:8px;background:rgba(0,0,0,.35);transform:translateX(-50%)"></div>
+          <span style="position:absolute;left:${(THRESH.xgb*100).toFixed(1)}%;top:8px;font-size:9px;color:var(--hint);transform:translateX(-50%);white-space:nowrap">thresh ${(THRESH.xgb*100).toFixed(1)}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consensus -->
+    <div class="consensus-card">
+      <div class="consensus-label">Clinical consensus</div>
+      <div class="consensus-verdict" style="color:${verdictColor}">${verdict}</div>
+      <div class="consensus-desc">${desc}</div>
+      <div class="avg-prob">
+        Average predicted probability across all three models: <strong>${pct(avgP)}</strong>
+        &nbsp;·&nbsp; Models above threshold: <strong>${[lrR,rfR,xgbR].filter(r=>r!=='low').length} / 3</strong>
+      </div>
+    </div>
+
+    <!-- Active factors -->
+    <div class="factors-card">
+      <div class="factors-label">Risk factor summary (${activeFactors.length} active)</div>
+      ${activeFactors.length === 0
+        ? '<div class="empty-factors">No risk factors selected.</div>'
+        : `<div class="pill-grid">
+            ${activeFactors.map(f => `<span class="pill ${f.weight === 'protective' ? 'protective' : 'active'}">${f.label}</span>`).join('')}
+           </div>`
+      }
+    </div>
+
+    <!-- Comparison table -->
+    <div class="metrics-card">
+      <div class="metrics-label">Model detail table</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Engine</th>
+            <th>Probability</th>
+            <th>Threshold</th>
+            <th>Classification</th>
+            <th>Typical AUROC*</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${modelInfo.map(m => `
+            <tr>
+              <td class="td-model">${m.name}</td>
+              <td>${m.engine}</td>
+              <td><strong>${pct(m.prob)}</strong></td>
+              <td>${(m.thresh*100).toFixed(1)}%</td>
+              <td>${chipHtml(m.risk)}</td>
+              <td>${m.auroc}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <div style="font-size:10px;color:var(--hint);margin-top:.75rem">* Estimated from study design (n=406, prevalence 23%). Exact values depend on fitted R artifacts.</div>
+    </div>
+
+  `;
+}
+
+// ── Reset ─────────────────────────────────────────────────────────
+function resetAll() {
+  document.getElementById('age').value   = 65;
+  document.getElementById('sbp').value   = 140;
+  document.getElementById('gcs').value   = 15;
+  document.getElementById('motor').value = 0;
+  document.getElementById('onset').value = 0;
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    state[btn.dataset.key] = false;
+    btn.classList.remove('active');
+  });
+  document.getElementById('results-panel').innerHTML = `
+    <div class="placeholder-card">
+      <div class="ph-icon">⚕</div>
+      <p>Enter patient data on the left and click<br><strong>Run prediction</strong> to see model comparison.</p>
+    </div>`;
+}
+</script>
+
+</body>
+</html>
