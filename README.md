@@ -1,2 +1,2 @@
-# ML-HS-Prediction
+# Stroke-Predictor
 Machine learning Hemorrhagic stroke prediction
