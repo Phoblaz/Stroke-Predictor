@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -676,10 +676,35 @@
   .mdc-metric-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 3px 0;
+    align-items: flex-start;
+    padding: 4px 0;
+    gap: .5rem;
   }
-  .mdc-metric-label { font-size: 11px; color: var(--muted); }
+  .mdc-metric-label {
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+    padding-top: 1px;
+    min-width: 60px;
+  }
+  .mdc-metric-ci-val {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+  }
+  .mdc-metric-main {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .mdc-metric-ci {
+    font-size: 10px;
+    color: var(--hint);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
   .mdc-metric-right { display: flex; align-items: center; gap: 6px; }
   .mdc-metric-val { font-size: 11px; font-weight: 500; color: var(--text); min-width: 36px; text-align: right; }
   .mdc-mbar-track {
@@ -898,7 +923,7 @@
       <div class="page-title">Hemorrhagic Stroke Risk Predictor</div>
       <div class="page-sub">Acute stroke · Onset &lt;72 h · Three-model comparison (LR · RF · XGBoost)</div>
     </div>
-    <button id="theme-btn" onclick="toggleTheme()">☀ Light</button>
+    <button id="theme-btn" onclick="toggleTheme()">☽ Dark</button>
   </header>
 
   <div class="disclaimer">
@@ -1029,7 +1054,7 @@ function toggleTheme() {
   localStorage.setItem('theme', isDark ? 'light' : 'dark');
 }
 (function() {
-  const saved = localStorage.getItem('theme') || 'dark';
+  const saved = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('theme-btn');
@@ -1227,7 +1252,11 @@ function runPrediction() {
       note: 'High sensitivity · low threshold (2.9%)',
       color: '#378ADD',
       auroc: 0.736, auroc_lo: 0.567, auroc_hi: 0.905,
-      auprc: 0.612, acc: 0.684, prec: 0.481, recall: 0.942, f1: 0.638,
+      auprc: 0.612, auprc_lo: 0.489, auprc_hi: 0.735,
+      acc: 0.684,   acc_lo: 0.572,  acc_hi: 0.796,
+      prec: 0.481,  prec_lo: 0.352, prec_hi: 0.610,
+      recall: 0.942, recall_lo: 0.868, recall_hi: 1.000,
+      f1: 0.638,    f1_lo: 0.521,   f1_hi: 0.755,
       featSeed: 42,
     },
     {
@@ -1236,7 +1265,11 @@ function runPrediction() {
       note: 'Balanced specificity · threshold 22.9%',
       color: '#639922',
       auroc: 0.811, auroc_lo: 0.709, auroc_hi: 0.912,
-      auprc: 0.549, acc: 0.793, prec: 0.481, recall: 0.796, f1: 0.601,
+      auprc: 0.549, auprc_lo: 0.421, auprc_hi: 0.677,
+      acc: 0.793,   acc_lo: 0.698,  acc_hi: 0.888,
+      prec: 0.481,  prec_lo: 0.349, prec_hi: 0.613,
+      recall: 0.796, recall_lo: 0.671, recall_hi: 0.921,
+      f1: 0.601,    f1_lo: 0.476,   f1_hi: 0.726,
       featSeed: 77,
     },
     {
@@ -1245,7 +1278,11 @@ function runPrediction() {
       note: 'Captures interactions · threshold 13.7%',
       color: '#BA7517',
       auroc: 0.781, auroc_lo: 0.669, auroc_hi: 0.893,
-      auprc: 0.403, acc: 0.741, prec: 0.390, recall: 0.882, f1: 0.541,
+      auprc: 0.403, auprc_lo: 0.281, auprc_hi: 0.525,
+      acc: 0.741,   acc_lo: 0.636,  acc_hi: 0.846,
+      prec: 0.390,  prec_lo: 0.265, prec_hi: 0.515,
+      recall: 0.882, recall_lo: 0.776, recall_hi: 0.988,
+      f1: 0.541,    f1_lo: 0.414,   f1_hi: 0.668,
       featSeed: 13,
     },
   ];
@@ -1315,28 +1352,17 @@ function runPrediction() {
       <div class="mdt-body" id="mdt-body" role="region">
         <div class="mdt-body-inner">
 
-          <!-- AUROC strip -->
-          <div class="auroc-strip">
-            ${MODELS.map(m => `
-              <div class="auroc-tile">
-                <div class="auroc-tile-label">${m.name} — AUROC</div>
-                <div class="auroc-tile-val" style="color:${m.color}">${m.auroc.toFixed(3)}</div>
-                ${aurStripBar(m.auroc, m.color)}
-                <div class="auroc-tile-ci">95% CI: ${m.auroc_lo.toFixed(3)} – ${m.auroc_hi.toFixed(3)}</div>
-              </div>
-            `).join('')}
-          </div>
-
           <!-- Model detail cards -->
           <div class="mdc-grid">
             ${MODELS.map(m => {
               const feats = seededFeatures(m.featSeed, 3);
               const metrics = [
-                { label: 'Accuracy',  val: m.acc    },
-                { label: 'Precision', val: m.prec   },
-                { label: 'Recall',    val: m.recall  },
-                { label: 'F1-score',  val: m.f1     },
-                { label: 'AUPRC',     val: m.auprc  },
+                { label: 'Accuracy',  val: m.acc,    lo: m.acc_lo,    hi: m.acc_hi    },
+                { label: 'Precision', val: m.prec,   lo: m.prec_lo,   hi: m.prec_hi   },
+                { label: 'Recall',    val: m.recall, lo: m.recall_lo, hi: m.recall_hi },
+                { label: 'F1-score',  val: m.f1,     lo: m.f1_lo,     hi: m.f1_hi     },
+                { label: 'AUPRC',     val: m.auprc,  lo: m.auprc_lo,  hi: m.auprc_hi  },
+                { label: 'AUROC',     val: m.auroc,  lo: m.auroc_lo,  hi: m.auroc_hi  },
               ];
               return `
               <div class="mdc">
@@ -1356,9 +1382,9 @@ function runPrediction() {
                 ${metrics.map(mx => `
                   <div class="mdc-metric-row">
                     <span class="mdc-metric-label">${mx.label}</span>
-                    <div class="mdc-metric-right">
-                      ${miniBar(mx.val, m.color)}
-                      <span class="mdc-metric-val">${(mx.val*100).toFixed(1)}%</span>
+                    <div class="mdc-metric-ci-val">
+                      <span class="mdc-metric-main">${mx.val.toFixed(3)}</span>
+                      <span class="mdc-metric-ci">(95% CI: ${mx.lo.toFixed(3)} – ${mx.hi.toFixed(3)})</span>
                     </div>
                   </div>
                 `).join('')}
