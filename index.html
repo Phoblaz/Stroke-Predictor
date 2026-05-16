@@ -66,14 +66,8 @@
   [data-theme="dark"] .pill.active     { background: #2c0e0e; border-color: #F09595; color: #F09595; }
   [data-theme="dark"] .pill.protective { background: #182808; border-color: #97C459; color: #97C459; }
   [data-theme="dark"] .disclaimer { background: #2a1c06; border-color: #FAC775; color: #FAC775; }
-  [data-theme="dark"] .gf-lr  { background: #85B7EB; }
-  [data-theme="dark"] .gf-rf  { background: #97C459; }
-  [data-theme="dark"] .gf-xgb { background: #FAC775; }
   [data-theme="dark"] .toggle-btn:hover,
   [data-theme="dark"] .toggle-btn.active { background: #0c2238; border-color: #85B7EB; color: #85B7EB; }
-  [data-theme="dark"] .gauge-model-lr  { color: #85B7EB !important; }
-  [data-theme="dark"] .gauge-model-rf  { color: #97C459 !important; }
-  [data-theme="dark"] .gauge-model-xgb { color: #FAC775 !important; }
   [data-theme="dark"] .mdc-risk-pill.rp-high { background: #3d1212; color: #F09595; }
   [data-theme="dark"] .mdc-risk-pill.rp-mod  { background: #3d2a08; color: #FAC775; }
   [data-theme="dark"] .mdc-risk-pill.rp-low  { background: #1e3808; color: #97C459; }
@@ -351,78 +345,76 @@
   .placeholder-card .ph-icon { font-size: 48px; margin-bottom: 1rem; opacity: .4; }
   .placeholder-card p { font-size: 13px; line-height: 1.7; }
 
-  /* ── Model Cards — vertical stack on mobile ──────────────── */
-  .model-cards-scroll {
-    display: flex;
-    flex-direction: column;
-    gap: .65rem;
-  }
-
-  .model-card {
+  /* ── Merged Model + Gauge card ───────────────────────────── */
+  .models-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: .85rem 1rem 1rem;
-    transition: border-color .2s;
-    width: 100%;
+    overflow: hidden;
   }
-  .model-card.risk-high { border-color: #E24B4A; background: var(--red-bg); }
-  .model-card.risk-mod  { border-color: #EF9F27; background: var(--amber-bg); }
-  .model-card.risk-low  { border-color: #97C459; background: var(--green-bg); }
-
-  .mc-engine {
-    font-size: 9px;
+  .models-card-title {
+    font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: .08em;
+    letter-spacing: .07em;
     color: var(--hint);
-    margin-bottom: .5rem;
+    padding: .85rem 1.1rem .5rem;
   }
-  .mc-prob {
+
+  /* One row per model */
+  .model-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+    gap: .85rem;
+    padding: .75rem 1.1rem;
+    border-top: 0.5px solid var(--border);
+    transition: background .15s;
+  }
+  .model-row:first-of-type { border-top: none; }
+
+  /* Left: big number + badge + name */
+  .mr-left { display: flex; flex-direction: column; gap: 3px; }
+  .mr-prob {
     font-family: 'DM Serif Display', serif;
-    font-size: 34px;
+    font-size: 30px;
     font-weight: 400;
     line-height: 1;
-    margin-bottom: .35rem;
   }
-  .mc-prob.c-high { color: var(--red); }
-  .mc-prob.c-mod  { color: var(--amber); }
-  .mc-prob.c-low  { color: var(--green); }
-  .mc-badge {
+  .mr-prob.c-high { color: var(--red); }
+  .mr-prob.c-mod  { color: var(--amber); }
+  .mr-prob.c-low  { color: var(--green); }
+
+  .mr-badge {
     display: inline-block;
     font-size: 10px;
     font-weight: 500;
     padding: 2px 8px;
     border-radius: 99px;
-    margin-bottom: .4rem;
+    align-self: flex-start;
   }
-  .mc-badge.b-high { background: #F7C1C1; color: #791F1F; }
-  .mc-badge.b-mod  { background: #FAC775; color: #633806; }
-  .mc-badge.b-low  { background: #C0DD97; color: #27500A; }
-  .mc-meta { font-size: 11px; color: var(--muted); }
-  .mc-thresh { font-size: 10px; color: var(--hint); margin-top: 2px; }
+  .mr-badge.b-high { background: #F7C1C1; color: #791F1F; }
+  .mr-badge.b-mod  { background: #FAC775; color: #633806; }
+  .mr-badge.b-low  { background: #C0DD97; color: #27500A; }
 
-  /* ── Gauge bars ─────────────────────────────────────────────── */
-  .gauge-card {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.1rem;
+  .mr-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 1px;
   }
-  .gauge-title { font-size: 11px; font-weight: 500; color: var(--muted); margin-bottom: .85rem; text-transform: uppercase; letter-spacing: .06em; }
-  .gauge-row { margin-bottom: .7rem; }
-  .gauge-row:last-child { margin-bottom: 0; }
-  .gauge-head { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
-  .gauge-model { font-weight: 500; }
-  .gauge-val   { color: var(--muted); }
-  .gauge-track {
+  .mr-engine { font-size: 10px; color: var(--hint); }
+
+  /* Right: gauge bar + threshold */
+  .mr-right { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .mr-gauge-track {
     height: 8px;
     background: var(--surface2);
     border-radius: 99px;
     overflow: hidden;
     border: 0.5px solid var(--border);
   }
-  .gauge-fill {
+  .mr-gauge-fill {
     height: 100%;
     border-radius: 99px;
     transition: width .6s cubic-bezier(.4,0,.2,1);
@@ -430,6 +422,35 @@
   .gf-lr  { background: #378ADD; }
   .gf-rf  { background: #639922; }
   .gf-xgb { background: #BA7517; }
+
+  .mr-thresh-row {
+    position: relative;
+    height: 14px;
+  }
+  .mr-thresh-tick {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 7px;
+    background: rgba(128,128,128,.45);
+    transform: translateX(-50%);
+  }
+  .mr-thresh-label {
+    position: absolute;
+    top: 8px;
+    font-size: 9px;
+    color: var(--hint);
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  /* dark mode badge colours kept */
+  [data-theme="dark"] .mr-badge.b-high { background: #3d1212; color: #F09595; }
+  [data-theme="dark"] .mr-badge.b-mod  { background: #3d2a08; color: #FAC775; }
+  [data-theme="dark"] .mr-badge.b-low  { background: #1e3808; color: #97C459; }
+  [data-theme="dark"] .gf-lr  { background: #85B7EB; }
+  [data-theme="dark"] .gf-rf  { background: #97C459; }
+  [data-theme="dark"] .gf-xgb { background: #FAC775; }
 
   /* ── Consensus ──────────────────────────────────────────────── */
   .consensus-card {
@@ -1202,38 +1223,28 @@ function runPrediction() {
       </div>
     </div>
 
-    <!-- ② Probability cards -->
-    <div class="model-cards-scroll">
-      ${MODELS.map(m => `
-        <div class="model-card risk-${m.risk}">
-          <div class="mc-engine">${m.engine}</div>
-          <div class="mc-prob c-${m.risk}">${pctPlain(m.prob)}%</div>
-          <div class="mc-badge b-${m.risk}">${RISK_LABELS[m.risk]}</div>
-          <div class="mc-meta">${m.name}</div>
-          <div class="mc-thresh">Threshold: ${(m.thresh*100).toFixed(1)}%</div>
-        </div>
-      `).join('')}
-    </div>
-
-    <!-- ③ Gauge bars -->
-    <div class="gauge-card">
-      <div class="gauge-title">Predicted probability vs threshold</div>
+    <!-- ② Merged model cards + gauge -->
+    <div class="models-card">
+      <div class="models-card-title">Model predictions vs threshold</div>
       ${MODELS.map((m, i) => {
-        const gClass  = ['gf-lr','gf-rf','gf-xgb'][i];
-        const gColor  = ['#185FA5','#3B6D11','#854F0B'][i];
-        const gmClass = ['gauge-model-lr','gauge-model-rf','gauge-model-xgb'][i];
+        const gClass = ['gf-lr','gf-rf','gf-xgb'][i];
+        const gColor = ['#185FA5','#3B6D11','#854F0B'][i];
         return `
-        <div class="gauge-row">
-          <div class="gauge-head">
-            <span class="gauge-model ${gmClass}" style="color:${gColor}">${m.name}</span>
-            <span class="gauge-val">${pct(m.prob)}</span>
+        <div class="model-row">
+          <div class="mr-left">
+            <div class="mr-prob c-${m.risk}">${pctPlain(m.prob)}%</div>
+            <span class="mr-badge b-${m.risk}">${RISK_LABELS[m.risk]}</span>
+            <div class="mr-name" style="color:${gColor}">${m.name}</div>
+            <div class="mr-engine">${m.engine}</div>
           </div>
-          <div class="gauge-track">
-            <div class="gauge-fill ${gClass}" style="width:${pctPlain(m.prob)}%"></div>
-          </div>
-          <div style="position:relative;height:16px;">
-            <div style="position:absolute;left:${(m.thresh*100).toFixed(1)}%;top:0;width:1px;height:8px;background:rgba(128,128,128,.5);transform:translateX(-50%)"></div>
-            <span style="position:absolute;left:${(m.thresh*100).toFixed(1)}%;top:8px;font-size:9px;color:var(--hint);transform:translateX(-50%);white-space:nowrap">thresh ${(m.thresh*100).toFixed(1)}%</span>
+          <div class="mr-right">
+            <div class="mr-gauge-track">
+              <div class="mr-gauge-fill ${gClass}" style="width:${pctPlain(m.prob)}%"></div>
+            </div>
+            <div class="mr-thresh-row">
+              <div class="mr-thresh-tick" style="left:${(m.thresh*100).toFixed(1)}%"></div>
+              <span class="mr-thresh-label" style="left:${(m.thresh*100).toFixed(1)}%">thresh ${(m.thresh*100).toFixed(1)}%</span>
+            </div>
           </div>
         </div>`;
       }).join('')}
