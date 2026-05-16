@@ -581,6 +581,7 @@
   .mdt-body-inner {
     overflow: hidden;
     padding: 0 1.1rem;
+    min-width: 0;
   }
   .metrics-card.expanded .mdt-body-inner {
     padding: .85rem 1.1rem 1rem;
@@ -691,11 +692,14 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
+    overflow: hidden;
   }
   .mdc-metric-top {
     display: flex;
     align-items: baseline;
     gap: 5px;
+    flex-wrap: wrap;
   }
   .mdc-metric-main {
     font-size: 12px;
@@ -717,6 +721,7 @@
     border-radius: 99px;
     border: 0.5px solid var(--border);
     overflow: visible;
+    min-width: 0;
   }
   /* CI range band */
   .mdc-ci-band {
@@ -951,8 +956,24 @@
     .auroc-tile { width: auto; }
 
     /* Model detail cards — 3 col grid on desktop */
-    .mdc-grid { flex-direction: row; }
-    .mdc { flex: 1; }
+    .mdc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      flex-direction: unset;
+    }
+    .mdc {
+      flex: unset;
+      min-width: 0;
+      overflow: hidden;
+    }
+    /* Prevent CI text from overflowing card on desktop */
+    .mdc-metric-ci {
+      white-space: normal;
+      word-break: break-word;
+    }
+    .mdc-metric-top {
+      flex-wrap: wrap;
+    }
   }
 </style>
 </head>
