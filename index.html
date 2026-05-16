@@ -1191,7 +1191,18 @@ function runPrediction() {
   const panel = document.getElementById('results-panel');
   panel.innerHTML = `
 
-    <!-- ① Probability cards -->
+    <!-- ① Consensus — top -->
+    <div class="consensus-card">
+      <div class="consensus-label">Clinical consensus</div>
+      <div class="consensus-verdict" style="color:${verdictColor}">${verdict}</div>
+      <div class="consensus-desc">${desc}</div>
+      <div class="avg-prob">
+        Average probability: <strong>${pct(avgP)}</strong>
+        &nbsp;·&nbsp; Models above threshold: <strong>${[lrR,rfR,xgbR].filter(r=>r!=='low').length} / 3</strong>
+      </div>
+    </div>
+
+    <!-- ② Probability cards -->
     <div class="model-cards-scroll">
       ${MODELS.map(m => `
         <div class="model-card risk-${m.risk}">
@@ -1204,7 +1215,7 @@ function runPrediction() {
       `).join('')}
     </div>
 
-    <!-- ② Gauge bars -->
+    <!-- ③ Gauge bars -->
     <div class="gauge-card">
       <div class="gauge-title">Predicted probability vs threshold</div>
       ${MODELS.map((m, i) => {
@@ -1226,17 +1237,6 @@ function runPrediction() {
           </div>
         </div>`;
       }).join('')}
-    </div>
-
-    <!-- ③ Consensus -->
-    <div class="consensus-card">
-      <div class="consensus-label">Clinical consensus</div>
-      <div class="consensus-verdict" style="color:${verdictColor}">${verdict}</div>
-      <div class="consensus-desc">${desc}</div>
-      <div class="avg-prob">
-        Average probability: <strong>${pct(avgP)}</strong>
-        &nbsp;·&nbsp; Models above threshold: <strong>${[lrR,rfR,xgbR].filter(r=>r!=='low').length} / 3</strong>
-      </div>
     </div>
 
     <!-- ④ Active factors -->
