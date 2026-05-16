@@ -289,6 +289,9 @@
   .toggle-btn:active { transform: scale(.97); }
   .toggle-btn.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); font-weight: 500; }
 
+  /* Hide desktop-only button group on mobile */
+  .desktop-btn-group { display: none; }
+
   /* ── Bottom action bar (mobile) ─────────────────────────────── */
   .bottom-action-bar {
     position: fixed;
@@ -348,16 +351,12 @@
   .placeholder-card .ph-icon { font-size: 48px; margin-bottom: 1rem; opacity: .4; }
   .placeholder-card p { font-size: 13px; line-height: 1.7; }
 
-  /* ── Model Cards — horizontal scroll on mobile ────────────── */
+  /* ── Model Cards — vertical stack on mobile ──────────────── */
   .model-cards-scroll {
     display: flex;
+    flex-direction: column;
     gap: .65rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
   }
-  .model-cards-scroll::-webkit-scrollbar { display: none; }
 
   .model-card {
     background: var(--surface);
@@ -365,8 +364,7 @@
     border-radius: var(--radius-lg);
     padding: .85rem 1rem 1rem;
     transition: border-color .2s;
-    min-width: 155px;
-    flex-shrink: 0;
+    width: 100%;
   }
   .model-card.risk-high { border-color: #E24B4A; background: var(--red-bg); }
   .model-card.risk-mod  { border-color: #EF9F27; background: var(--amber-bg); }
@@ -567,24 +565,19 @@
     padding: .85rem 1.1rem 1rem;
   }
 
-  /* AUROC strip */
+  /* AUROC strip — vertical stack on mobile */
   .auroc-strip {
     display: flex;
+    flex-direction: column;
     gap: .6rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
     margin-bottom: .75rem;
-    padding-bottom: 2px;
   }
-  .auroc-strip::-webkit-scrollbar { display: none; }
   .auroc-tile {
     background: var(--surface2);
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
     padding: .7rem .85rem;
-    min-width: 140px;
-    flex-shrink: 0;
+    width: 100%;
   }
   .auroc-tile-label {
     font-size: 9px;
@@ -782,7 +775,7 @@
     .toggle-grid { grid-template-columns: 1fr 1fr; }
 
     /* Buttons back in the panel (no sticky bar on desktop) */
-    .bottom-action-bar { display: none; }
+    .bottom-action-bar { display: none !important; }
     .desktop-btn-group {
       display: flex;
       flex-direction: column;
@@ -822,20 +815,18 @@
     /* Model cards — 3 col grid on desktop */
     .model-cards-scroll {
       display: grid;
+      flex-direction: unset;
       grid-template-columns: repeat(3, 1fr);
-      overflow: visible;
-      padding-bottom: 0;
     }
-    .model-card { min-width: auto; flex-shrink: 1; }
+    .model-card { width: auto; }
 
     /* AUROC strip — 3 col grid on desktop */
     .auroc-strip {
       display: grid;
+      flex-direction: unset;
       grid-template-columns: repeat(3, 1fr);
-      overflow: visible;
-      padding-bottom: 0;
     }
-    .auroc-tile { min-width: auto; }
+    .auroc-tile { width: auto; }
 
     /* Model detail cards — 3 col grid on desktop */
     .mdc-grid { flex-direction: row; }
