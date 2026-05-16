@@ -673,38 +673,80 @@
 
   .mdc-divider { border: none; border-top: 0.5px solid var(--border); margin: .6rem 0; }
 
+  /* ── Metric rows with CI strip bar ─────────────────────────── */
   .mdc-metric-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 4px 0;
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    align-items: start;
+    padding: 5px 0;
     gap: .5rem;
   }
   .mdc-metric-label {
     font-size: 11px;
     color: var(--muted);
-    flex-shrink: 0;
-    padding-top: 1px;
-    min-width: 60px;
+    padding-top: 2px;
+    line-height: 1.3;
   }
-  .mdc-metric-ci-val {
+  .mdc-metric-body {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 1px;
+    gap: 3px;
+  }
+  .mdc-metric-top {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
   }
   .mdc-metric-main {
     font-size: 12px;
     font-weight: 600;
     color: var(--text);
-    line-height: 1.2;
+    line-height: 1;
   }
   .mdc-metric-ci {
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--hint);
-    line-height: 1.2;
     white-space: nowrap;
   }
+
+  /* CI strip bar track */
+  .mdc-ci-track {
+    position: relative;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    overflow: visible;
+  }
+  /* CI range band */
+  .mdc-ci-band {
+    position: absolute;
+    top: 0; bottom: 0;
+    border-radius: 99px;
+    opacity: 0.28;
+  }
+  /* Point estimate dot */
+  .mdc-ci-dot {
+    position: absolute;
+    top: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    border: 1.5px solid var(--surface);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.12);
+  }
+  /* Scale ticks (0, 0.5, 1.0) */
+  .mdc-ci-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+  }
+  .mdc-ci-scale span {
+    font-size: 8.5px;
+    color: var(--hint);
+    opacity: .7;
+  }
+
   .mdc-metric-right { display: flex; align-items: center; gap: 6px; }
   .mdc-metric-val { font-size: 11px; font-weight: 500; color: var(--text); min-width: 36px; text-align: right; }
   .mdc-mbar-track {
@@ -1199,6 +1241,16 @@ const miniBar = (val, color) =>
 const aurStripBar = (val, color) =>
   `<div class="auroc-tile-bar-track"><div class="auroc-tile-bar-fill" style="width:${(val*100).toFixed(1)}%;background:${color}"></div></div>`;
 const rankClass = i => ['mdc-rank-1','mdc-rank-2','mdc-rank-3'][i];
+const ciBar = (val, lo, hi, color) => {
+  const pct = v => (Math.min(Math.max(v, 0), 1) * 100).toFixed(2);
+  return `
+    <div class="mdc-ci-track">
+      <div class="mdc-ci-band" style="left:${pct(lo)}%;width:${pct(hi-lo)}%;background:${color}"></div>
+      <div class="mdc-ci-dot"  style="left:${pct(val)}%;background:${color}"></div>
+    </div>
+    <div class="mdc-ci-scale"><span>0</span><span>0.5</span><span>1.0</span></div>
+  `;
+};
 
 // ── Main prediction ───────────────────────────────────────────────
 function runPrediction() {
@@ -1382,9 +1434,12 @@ function runPrediction() {
                 ${metrics.map(mx => `
                   <div class="mdc-metric-row">
                     <span class="mdc-metric-label">${mx.label}</span>
-                    <div class="mdc-metric-ci-val">
-                      <span class="mdc-metric-main">${mx.val.toFixed(3)}</span>
-                      <span class="mdc-metric-ci">(95% CI: ${mx.lo.toFixed(3)} – ${mx.hi.toFixed(3)})</span>
+                    <div class="mdc-metric-body">
+                      <div class="mdc-metric-top">
+                        <span class="mdc-metric-main">${mx.val.toFixed(3)}</span>
+                        <span class="mdc-metric-ci">95% CI: ${mx.lo.toFixed(3)} – ${mx.hi.toFixed(3)}</span>
+                      </div>
+                      ${ciBar(mx.val, mx.lo, mx.hi, m.color)}
                     </div>
                   </div>
                 `).join('')}
