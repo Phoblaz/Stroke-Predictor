@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  /* ── Reset & base ─────────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -29,6 +28,7 @@
     --red-bg:    #FCEBEB;
     --radius:    10px;
     --radius-lg: 14px;
+    --bottom-bar: 64px;
   }
 
   [data-theme="dark"] {
@@ -50,6 +50,7 @@
     --red-bg:    #2c0e0e;
   }
 
+  /* ── Dark theme overrides ─────────────────────────────────────── */
   [data-theme="dark"] .model-card.risk-high { border-color: #F09595; background: #2c0e0e; }
   [data-theme="dark"] .model-card.risk-mod  { border-color: #FAC775; background: #2a1c06; }
   [data-theme="dark"] .model-card.risk-low  { border-color: #97C459; background: #182808; }
@@ -73,91 +74,168 @@
   [data-theme="dark"] .gauge-model-lr  { color: #85B7EB !important; }
   [data-theme="dark"] .gauge-model-rf  { color: #97C459 !important; }
   [data-theme="dark"] .gauge-model-xgb { color: #FAC775 !important; }
+  [data-theme="dark"] .mdc-risk-pill.rp-high { background: #3d1212; color: #F09595; }
+  [data-theme="dark"] .mdc-risk-pill.rp-mod  { background: #3d2a08; color: #FAC775; }
+  [data-theme="dark"] .mdc-risk-pill.rp-low  { background: #1e3808; color: #97C459; }
+  [data-theme="dark"] .mobile-tab.active { background: var(--blue-bg); color: var(--blue); border-color: var(--blue); }
+  [data-theme="dark"] .bottom-action-bar { background: rgba(17,17,16,0.95); border-top-color: rgba(255,255,255,0.08); }
 
+  /* ── Base ─────────────────────────────────────────────────────── */
   body {
     font-family: 'DM Sans', sans-serif;
     font-size: 15px;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 2rem 1rem;
   }
 
-  /* ── Layout ───────────────────────────────────────────────────── */
-  .container { max-width: 1080px; margin: 0 auto; }
+  /* ═══════════════════════════════════════════════════════════════
+     MOBILE LAYOUT  (default — narrow screens)
+  ═══════════════════════════════════════════════════════════════ */
 
-  .page-header { margin-bottom: 2rem; }
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* ── Top header bar ─────────────────────────────────────────── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .85rem 1rem;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
   .page-title {
     font-family: 'DM Serif Display', serif;
-    font-size: 28px;
+    font-size: 16px;
     font-weight: 400;
     color: var(--text);
-    margin-bottom: .25rem;
+    line-height: 1.2;
   }
-  .page-sub { font-size: 13px; color: var(--muted); }
+  .page-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
+  #theme-btn {
+    padding: 6px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--surface2);
+    color: var(--muted);
+    transition: all .2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Disclaimer ─────────────────────────────────────────────── */
   .disclaimer {
     background: var(--amber-bg);
-    border: 0.5px solid #EF9F27;
-    border-radius: var(--radius);
-    padding: .65rem 1rem;
-    font-size: 12px;
+    border-bottom: 0.5px solid #EF9F27;
+    padding: .55rem 1rem;
+    font-size: 11px;
     color: var(--amber);
-    margin-bottom: 1.5rem;
+    line-height: 1.5;
   }
 
-  .app-grid {
-    display: grid;
-    grid-template-columns: 340px 1fr;
-    gap: 1.25rem;
-    align-items: start;
+  /* ── Mobile Tab Navigation ──────────────────────────────────── */
+  .mobile-tabs {
+    display: flex;
+    gap: 6px;
+    padding: .75rem 1rem .5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    background: var(--bg);
+    position: sticky;
+    top: 53px;
+    z-index: 90;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .mobile-tabs::-webkit-scrollbar { display: none; }
+
+  .mobile-tab {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    border: 0.5px solid var(--border2);
+    border-radius: 99px;
+    cursor: pointer;
+    background: var(--surface2);
+    color: var(--muted);
+    white-space: nowrap;
+    transition: all .15s;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .mobile-tab.active {
+    background: var(--blue-bg);
+    color: var(--blue);
+    border-color: var(--blue);
   }
 
-  @media(max-width: 780px) {
-    .app-grid { grid-template-columns: 1fr; }
+  /* ── Main content area ──────────────────────────────────────── */
+  .main-content {
+    padding: 1rem 1rem calc(var(--bottom-bar) + 1rem);
   }
 
-  /* ── Sidebar / Input Panel ────────────────────────────────────── */
+  /* Tab views */
+  .tab-view { display: none; flex-direction: column; gap: .85rem; }
+  .tab-view.active { display: flex; }
+
+  /* ── Input Panel ────────────────────────────────────────────── */
   .input-panel {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1.25rem;
+    padding: 1rem;
   }
-
   .panel-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .08em;
     color: var(--hint);
-    margin-bottom: 1rem;
+    margin-bottom: .85rem;
   }
-
   .section-sep {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .07em;
     color: var(--hint);
-    margin: 1rem 0 .5rem;
-    padding-top: .75rem;
+    margin: .85rem 0 .45rem;
+    padding-top: .65rem;
     border-top: 0.5px solid var(--border);
   }
   .section-sep:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
 
-  .field { margin-bottom: .7rem; }
+  /* Numeric fields — 2 col on mobile */
+  .fields-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+  }
+  .field { margin-bottom: 0; }
   .field label {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     margin-bottom: 3px;
   }
   .field input[type=number],
   .field select {
     width: 100%;
-    padding: 7px 10px;
-    font-size: 13px;
+    padding: 9px 10px;
+    font-size: 14px;
     font-family: 'DM Sans', sans-serif;
     border: 0.5px solid var(--border2);
     border-radius: var(--radius);
@@ -167,10 +245,12 @@
     -webkit-appearance: none;
     outline: none;
     transition: border-color .15s;
+    -webkit-tap-highlight-color: transparent;
   }
   .field input[type=number]:focus,
   .field select:focus { border-color: var(--blue); background: var(--surface); }
 
+  .field-full { grid-column: 1 / -1; }
   .select-wrap { position: relative; }
   .select-wrap::after {
     content: '▾';
@@ -183,13 +263,14 @@
     pointer-events: none;
   }
 
+  /* Toggle buttons — 3 col on mobile for dense layout */
   .toggle-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 5px;
   }
   .toggle-btn {
-    padding: 6px 8px;
+    padding: 8px 4px;
     font-size: 11px;
     font-weight: 500;
     font-family: 'DM Sans', sans-serif;
@@ -202,127 +283,138 @@
     transition: all .15s;
     user-select: none;
     line-height: 1.3;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
-  .toggle-btn:hover { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+  .toggle-btn:active { transform: scale(.97); }
   .toggle-btn.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); font-weight: 500; }
 
+  /* ── Bottom action bar (mobile) ─────────────────────────────── */
+  .bottom-action-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    gap: .6rem;
+    padding: .75rem 1rem calc(.75rem + env(safe-area-inset-bottom));
+    background: rgba(248,247,244,0.95);
+    border-top: 0.5px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 200;
+  }
   .predict-btn {
-    width: 100%;
-    margin-top: 1.25rem;
-    padding: 11px;
+    flex: 1;
+    padding: 13px;
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    border: 0.5px solid var(--border2);
+    border: none;
     border-radius: var(--radius);
     cursor: pointer;
     background: var(--text);
     color: var(--bg);
     transition: all .15s;
     letter-spacing: .01em;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
-  .predict-btn:hover { opacity: .85; }
-  .predict-btn:active { transform: scale(.99); }
-
+  .predict-btn:active { transform: scale(.98); opacity: .9; }
   .reset-btn {
-    width: 100%;
-    margin-top: .5rem;
-    padding: 8px;
+    padding: 13px 16px;
     font-family: 'DM Sans', sans-serif;
     font-size: 12px;
-    border: 0.5px solid var(--border);
+    border: 0.5px solid var(--border2);
     border-radius: var(--radius);
     cursor: pointer;
     background: transparent;
     color: var(--muted);
     transition: all .15s;
+    touch-action: manipulation;
+    white-space: nowrap;
   }
-  .reset-btn:hover { background: var(--surface2); }
+  .reset-btn:active { background: var(--surface2); }
 
-  /* ── Results Panel ────────────────────────────────────────────── */
-  .results-panel { display: flex; flex-direction: column; gap: 1rem; }
+  /* ── Results Panel ──────────────────────────────────────────── */
+  .results-panel { display: flex; flex-direction: column; gap: .85rem; }
 
   .placeholder-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 3rem 2rem;
+    padding: 3rem 1.5rem;
     text-align: center;
     color: var(--hint);
   }
   .placeholder-card .ph-icon { font-size: 48px; margin-bottom: 1rem; opacity: .4; }
-  .placeholder-card p { font-size: 14px; }
+  .placeholder-card p { font-size: 13px; line-height: 1.7; }
 
-  /* ── Model Cards ──────────────────────────────────────────────── */
-  .model-cards-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .75rem;
+  /* ── Model Cards — horizontal scroll on mobile ────────────── */
+  .model-cards-scroll {
+    display: flex;
+    gap: .65rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
   }
-  @media(max-width:600px) { .model-cards-row { grid-template-columns: 1fr; } }
+  .model-cards-scroll::-webkit-scrollbar { display: none; }
 
   .model-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1rem 1.1rem 1.1rem;
+    padding: .85rem 1rem 1rem;
     transition: border-color .2s;
+    min-width: 155px;
+    flex-shrink: 0;
   }
-  .model-card.risk-high   { border-color: #E24B4A; background: var(--red-bg); }
-  .model-card.risk-mod    { border-color: #EF9F27; background: var(--amber-bg); }
-  .model-card.risk-low    { border-color: #97C459; background: var(--green-bg); }
+  .model-card.risk-high { border-color: #E24B4A; background: var(--red-bg); }
+  .model-card.risk-mod  { border-color: #EF9F27; background: var(--amber-bg); }
+  .model-card.risk-low  { border-color: #97C459; background: var(--green-bg); }
 
   .mc-engine {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .08em;
     color: var(--hint);
-    margin-bottom: .6rem;
+    margin-bottom: .5rem;
   }
   .mc-prob {
     font-family: 'DM Serif Display', serif;
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 400;
     line-height: 1;
-    margin-bottom: .4rem;
+    margin-bottom: .35rem;
   }
   .mc-prob.c-high { color: var(--red); }
   .mc-prob.c-mod  { color: var(--amber); }
   .mc-prob.c-low  { color: var(--green); }
-
   .mc-badge {
     display: inline-block;
     font-size: 10px;
     font-weight: 500;
-    padding: 2px 9px;
+    padding: 2px 8px;
     border-radius: 99px;
-    margin-bottom: .5rem;
+    margin-bottom: .4rem;
   }
   .mc-badge.b-high { background: #F7C1C1; color: #791F1F; }
   .mc-badge.b-mod  { background: #FAC775; color: #633806; }
   .mc-badge.b-low  { background: #C0DD97; color: #27500A; }
-
   .mc-meta { font-size: 11px; color: var(--muted); }
   .mc-thresh { font-size: 10px; color: var(--hint); margin-top: 2px; }
 
-  /* ── Gauge bars ───────────────────────────────────────────────── */
+  /* ── Gauge bars ─────────────────────────────────────────────── */
   .gauge-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1.1rem 1.25rem;
+    padding: 1rem 1.1rem;
   }
-  .gauge-title { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: .9rem; }
-
+  .gauge-title { font-size: 11px; font-weight: 500; color: var(--muted); margin-bottom: .85rem; text-transform: uppercase; letter-spacing: .06em; }
   .gauge-row { margin-bottom: .7rem; }
   .gauge-row:last-child { margin-bottom: 0; }
-  .gauge-head {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
+  .gauge-head { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
   .gauge-model { font-weight: 500; }
   .gauge-val   { color: var(--muted); }
   .gauge-track {
@@ -341,72 +433,55 @@
   .gf-rf  { background: #639922; }
   .gf-xgb { background: #BA7517; }
 
-  .gauge-thresh-line-wrap { position: relative; margin-top: -4px; height: 4px; }
-  .thresh-tick {
-    position: absolute;
-    top: 0;
-    width: 1px;
-    height: 8px;
-    background: rgba(0,0,0,.3);
-    transform: translateX(-50%);
-  }
-  .thresh-label {
-    position: absolute;
-    top: 9px;
-    font-size: 9px;
-    color: var(--hint);
-    transform: translateX(-50%);
-    white-space: nowrap;
-  }
-
-  /* ── Consensus ────────────────────────────────────────────────── */
+  /* ── Consensus ──────────────────────────────────────────────── */
   .consensus-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1.1rem 1.25rem;
+    padding: 1rem 1.1rem;
   }
   .consensus-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .07em;
     color: var(--hint);
-    margin-bottom: .5rem;
+    margin-bottom: .4rem;
   }
   .consensus-verdict {
     font-family: 'DM Serif Display', serif;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 400;
     margin-bottom: .4rem;
   }
-  .consensus-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .consensus-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
   .avg-prob {
-    margin-top: .75rem;
-    font-size: 12px;
+    margin-top: .7rem;
+    font-size: 11px;
     color: var(--hint);
-    padding-top: .65rem;
+    padding-top: .6rem;
     border-top: 0.5px solid var(--border);
+    line-height: 1.7;
   }
 
-  /* ── Factor pills ─────────────────────────────────────────────── */
+  /* ── Factor pills ───────────────────────────────────────────── */
   .factors-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem;
+    padding: .85rem 1.1rem;
   }
   .factors-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .07em;
     color: var(--hint);
-    margin-bottom: .6rem;
+    margin-bottom: .55rem;
   }
-  .pill-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill-grid { display: flex; flex-wrap: wrap; gap: 5px; }
   .pill {
-    font-size: 12px;
+    font-size: 11px;
     padding: 4px 10px;
     border-radius: 99px;
     border: 0.5px solid var(--border2);
@@ -415,15 +490,34 @@
   }
   .pill.active { background: var(--red-bg); border-color: #E24B4A; color: var(--red); }
   .pill.protective { background: var(--green-bg); border-color: #97C459; color: var(--green); }
-  .empty-factors { font-size: 13px; color: var(--hint); font-style: italic; }
+  .empty-factors { font-size: 12px; color: var(--hint); font-style: italic; }
 
-  /* ── Metric table ─────────────────────────────────────────────── */
+  /* ── Metrics card (collapsible) ─────────────────────────────── */
   .metrics-card {
     background: var(--surface);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem;
-    overflow-x: auto;
+    overflow: hidden;
+  }
+
+  /* Collapsible header — always visible */
+  .mdt-toggle-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .9rem 1.1rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background .15s;
+  }
+  .mdt-toggle-header:active { background: var(--surface2); }
+
+  .mdt-header-left {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
   }
   .metrics-label {
     font-size: 11px;
@@ -431,135 +525,113 @@
     text-transform: uppercase;
     letter-spacing: .07em;
     color: var(--hint);
-    margin-bottom: .75rem;
-  }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th { text-align: left; font-weight: 500; color: var(--muted); padding: 4px 8px 8px 0; border-bottom: 0.5px solid var(--border); }
-  td { padding: 7px 8px 7px 0; border-bottom: 0.5px solid var(--border); color: var(--text); }
-  tr:last-child td { border-bottom: none; }
-  .td-model { font-weight: 500; }
-  .chip {
-    display: inline-block;
-    font-size: 10px;
-    padding: 1px 7px;
-    border-radius: 99px;
-    font-weight: 500;
-  }
-  .chip-high { background: #F7C1C1; color: #791F1F; }
-  .chip-mod  { background: #FAC775; color: #633806; }
-  .chip-low  { background: #C0DD97; color: #27500A; }
-
-  /* ── Footer ───────────────────────────────────────────────────── */
-  .footer {
-    margin-top: 2rem;
-    font-size: 11px;
-    color: var(--hint);
-    line-height: 1.7;
-    text-align: center;
-    border-top: 0.5px solid var(--border);
-    padding-top: 1.25rem;
-  }
-
-  /* ── Model Detail Table (new card design) ─────────────────────── */
-  .mdt-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  .mdt-title {
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    color: var(--hint);
   }
   .mdt-badge {
-    font-size: 11px;
-    padding: 2px 9px;
+    font-size: 10px;
+    padding: 2px 8px;
     border-radius: 99px;
     background: var(--green-bg);
     color: var(--green);
     border: 0.5px solid var(--green);
     font-weight: 500;
   }
-
-  /* AUROC summary strip */
-  .auroc-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .75rem;
-    margin-bottom: .75rem;
+  .mdt-chevron {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--hint);
+    font-size: 12px;
+    transition: transform .25s cubic-bezier(.4,0,.2,1);
+    flex-shrink: 0;
   }
+  .metrics-card.expanded .mdt-chevron { transform: rotate(180deg); }
+
+  /* Collapsible body */
+  .mdt-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .3s cubic-bezier(.4,0,.2,1);
+    border-top: 0.5px solid transparent;
+  }
+  .metrics-card.expanded .mdt-body {
+    grid-template-rows: 1fr;
+    border-top-color: var(--border);
+  }
+  .mdt-body-inner {
+    overflow: hidden;
+    padding: 0 1.1rem;
+  }
+  .metrics-card.expanded .mdt-body-inner {
+    padding: .85rem 1.1rem 1rem;
+  }
+
+  /* AUROC strip */
+  .auroc-strip {
+    display: flex;
+    gap: .6rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-bottom: .75rem;
+    padding-bottom: 2px;
+  }
+  .auroc-strip::-webkit-scrollbar { display: none; }
   .auroc-tile {
-    background: var(--surface);
+    background: var(--surface2);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: .85rem 1rem;
+    border-radius: var(--radius);
+    padding: .7rem .85rem;
+    min-width: 140px;
+    flex-shrink: 0;
   }
   .auroc-tile-label {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .07em;
     color: var(--hint);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
   .auroc-tile-val {
     font-family: 'DM Serif Display', serif;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 400;
     line-height: 1;
-    margin-bottom: 6px;
-  }
-  .auroc-tile-bar-track {
-    height: 5px;
-    background: var(--surface2);
-    border-radius: 99px;
-    overflow: hidden;
-    border: 0.5px solid var(--border);
     margin-bottom: 5px;
   }
-  .auroc-tile-bar-fill {
-    height: 100%;
+  .auroc-tile-bar-track {
+    height: 4px;
+    background: var(--bg);
     border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 4px;
   }
-  .auroc-tile-ci {
-    font-size: 10px;
-    color: var(--hint);
-  }
+  .auroc-tile-bar-fill { height: 100%; border-radius: 99px; }
+  .auroc-tile-ci { font-size: 9px; color: var(--hint); }
 
-  /* Main 3-column model card grid */
+  /* Model detail cards — vertical stack on mobile */
   .mdc-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .75rem;
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
     margin-bottom: .75rem;
   }
-  @media(max-width:700px) { .mdc-grid { grid-template-columns: 1fr; } }
-
   .mdc {
-    background: var(--surface);
+    background: var(--surface2);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1rem 1.1rem;
+    padding: .85rem 1rem;
   }
   .mdc-head {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: .8rem;
+    margin-bottom: .7rem;
   }
-  .mdc-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 2px;
-  }
-  .mdc-engine {
-    font-size: 10px;
-    color: var(--hint);
-  }
+  .mdc-name { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .mdc-engine { font-size: 10px; color: var(--hint); }
   .mdc-risk-pill {
     font-size: 10px;
     font-weight: 500;
@@ -571,110 +643,55 @@
   .mdc-risk-pill.rp-high { background: #F7C1C1; color: #791F1F; border: 0.5px solid #F09595; }
   .mdc-risk-pill.rp-mod  { background: #FAC775; color: #633806; border: 0.5px solid #EF9F27; }
   .mdc-risk-pill.rp-low  { background: #C0DD97; color: #27500A; border: 0.5px solid #97C459; }
-  [data-theme="dark"] .mdc-risk-pill.rp-high { background: #3d1212; color: #F09595; }
-  [data-theme="dark"] .mdc-risk-pill.rp-mod  { background: #3d2a08; color: #FAC775; }
-  [data-theme="dark"] .mdc-risk-pill.rp-low  { background: #1e3808; color: #97C459; }
 
-  .mdc-prob-row {
-    margin-bottom: .75rem;
-  }
-  .mdc-prob-label {
-    font-size: 10px;
-    color: var(--hint);
-    margin-bottom: 2px;
-  }
+  .mdc-prob-row { margin-bottom: .65rem; }
+  .mdc-prob-label { font-size: 10px; color: var(--hint); margin-bottom: 2px; }
   .mdc-prob-val {
     font-family: 'DM Serif Display', serif;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 400;
     line-height: 1;
   }
   .mdc-prob-val.pv-high { color: var(--red); }
   .mdc-prob-val.pv-mod  { color: var(--amber); }
   .mdc-prob-val.pv-low  { color: var(--green); }
-  .mdc-prob-note {
-    font-size: 10px;
-    color: var(--hint);
-    margin-top: 3px;
-  }
+  .mdc-prob-note { font-size: 10px; color: var(--hint); margin-top: 2px; }
 
-  .mdc-divider {
-    border: none;
-    border-top: 0.5px solid var(--border);
-    margin: .65rem 0;
-  }
+  .mdc-divider { border: none; border-top: 0.5px solid var(--border); margin: .6rem 0; }
 
-  /* Metric rows */
   .mdc-metric-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 3px 0;
   }
-  .mdc-metric-label {
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .mdc-metric-right {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .mdc-metric-val {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text);
-    min-width: 36px;
-    text-align: right;
-  }
+  .mdc-metric-label { font-size: 11px; color: var(--muted); }
+  .mdc-metric-right { display: flex; align-items: center; gap: 6px; }
+  .mdc-metric-val { font-size: 11px; font-weight: 500; color: var(--text); min-width: 36px; text-align: right; }
   .mdc-mbar-track {
-    width: 48px;
-    height: 4px;
-    background: var(--surface2);
-    border-radius: 99px;
-    overflow: hidden;
-    border: 0.5px solid var(--border);
+    width: 48px; height: 4px;
+    background: var(--bg);
+    border-radius: 99px; overflow: hidden;
   }
-  .mdc-mbar-fill {
-    height: 100%;
-    border-radius: 99px;
-  }
+  .mdc-mbar-fill { height: 100%; border-radius: 99px; }
 
-  /* Feature importance chips */
   .mdc-feat-label {
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--hint);
-    margin-bottom: 6px;
+    font-size: 9px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .06em;
+    color: var(--hint); margin-bottom: 5px;
   }
-  .mdc-feat-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
+  .mdc-feat-chips { display: flex; flex-wrap: wrap; gap: 4px; }
   .mdc-feat-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    padding: 3px 8px;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 3px 8px;
     border-radius: var(--radius);
-    background: var(--surface2);
-    color: var(--muted);
+    background: var(--surface); color: var(--muted);
     border: 0.5px solid var(--border);
   }
   .mdc-rank {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    font-size: 9px;
-    font-weight: 500;
-    flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px; border-radius: 50%;
+    font-size: 9px; font-weight: 500; flex-shrink: 0;
   }
   .mdc-rank-1 { background: var(--blue-bg);  color: var(--blue); }
   .mdc-rank-2 { background: var(--green-bg); color: var(--green); }
@@ -682,28 +699,147 @@
 
   /* Research disclaimer */
   .mdt-disclaimer {
-    background: var(--surface2);
+    background: var(--amber-bg);
     border: 0.5px solid var(--border);
     border-radius: var(--radius);
-    padding: .75rem 1rem;
-    display: flex;
-    gap: .6rem;
-    align-items: flex-start;
+    padding: .7rem .9rem;
+    display: flex; gap: .5rem; align-items: flex-start;
   }
-  .mdt-disclaimer-icon {
-    font-size: 14px;
-    flex-shrink: 0;
-    margin-top: 1px;
-    color: var(--amber);
+  .mdt-disclaimer-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; color: var(--amber); }
+  .mdt-disclaimer-body { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .mdt-disclaimer-body strong { color: var(--text); font-weight: 500; }
+
+  /* ── Footer ─────────────────────────────────────────────────── */
+  .footer {
+    margin-top: 1.5rem;
+    font-size: 10px;
+    color: var(--hint);
+    line-height: 1.8;
+    text-align: center;
+    border-top: 0.5px solid var(--border);
+    padding-top: 1rem;
   }
-  .mdt-disclaimer-body {
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.6;
+
+  /* ── Chips ──────────────────────────────────────────────────── */
+  .chip {
+    display: inline-block; font-size: 10px;
+    padding: 1px 7px; border-radius: 99px; font-weight: 500;
   }
-  .mdt-disclaimer-body strong {
-    color: var(--text);
-    font-weight: 500;
+  .chip-high { background: #F7C1C1; color: #791F1F; }
+  .chip-mod  { background: #FAC775; color: #633806; }
+  .chip-low  { background: #C0DD97; color: #27500A; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     DESKTOP LAYOUT  (≥ 780px)
+  ═══════════════════════════════════════════════════════════════ */
+  @media (min-width: 780px) {
+
+    body { padding: 0; }
+
+    .page-header {
+      padding: 1rem 2rem;
+      position: static;
+    }
+    .page-title { font-size: 22px; }
+    .page-sub { font-size: 12px; }
+
+    .disclaimer {
+      padding: .65rem 2rem;
+      border-bottom: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    /* Hide mobile tabs on desktop */
+    .mobile-tabs { display: none; }
+
+    .main-content {
+      padding: 1.25rem 2rem 2rem;
+    }
+
+    /* Desktop: both tab views visible in a grid */
+    .tab-view {
+      display: flex !important;
+    }
+
+    .desktop-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    /* Input panel — sidebar on desktop */
+    .input-panel { padding: 1.25rem; }
+    .section-sep { font-size: 11px; }
+
+    /* Fields — 1 col on desktop sidebar */
+    .fields-2col { grid-template-columns: 1fr; gap: .6rem; }
+    .field-full { grid-column: auto; }
+
+    /* 2-col toggles on desktop (sidebar is narrower) */
+    .toggle-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Buttons back in the panel (no sticky bar on desktop) */
+    .bottom-action-bar { display: none; }
+    .desktop-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin-top: 1.25rem;
+    }
+    .predict-btn-inline {
+      width: 100%;
+      padding: 11px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      background: var(--text);
+      color: var(--bg);
+      transition: all .15s;
+      letter-spacing: .01em;
+    }
+    .predict-btn-inline:hover { opacity: .85; }
+    .predict-btn-inline:active { transform: scale(.99); }
+    .reset-btn-inline {
+      width: 100%;
+      padding: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: all .15s;
+    }
+    .reset-btn-inline:hover { background: var(--surface2); }
+
+    /* Model cards — 3 col grid on desktop */
+    .model-cards-scroll {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: visible;
+      padding-bottom: 0;
+    }
+    .model-card { min-width: auto; flex-shrink: 1; }
+
+    /* AUROC strip — 3 col grid on desktop */
+    .auroc-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      overflow: visible;
+      padding-bottom: 0;
+    }
+    .auroc-tile { min-width: auto; }
+
+    /* Model detail cards — 3 col grid on desktop */
+    .mdc-grid { flex-direction: row; }
+    .mdc { flex: 1; }
   }
 </style>
 </head>
@@ -711,125 +847,134 @@
 
 <div class="container">
 
-  <header class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+  <header class="page-header">
     <div>
       <div class="page-title">Hemorrhagic Stroke Risk Predictor</div>
-      <div class="page-sub">Acute stroke · Onset less than 72 hours · Three-model comparison (LR · RF · XGBoost)</div>
+      <div class="page-sub">Acute stroke · Onset &lt;72 h · Three-model comparison (LR · RF · XGBoost)</div>
     </div>
-    <button id="theme-btn" onclick="toggleTheme()" style="
-      margin-top:4px;padding:7px 14px;
-      font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
-      border:0.5px solid var(--border2);border-radius:var(--radius);
-      cursor:pointer;background:var(--surface);color:var(--muted);
-      transition:all .2s;white-space:nowrap;flex-shrink:0;">☀ Light</button>
+    <button id="theme-btn" onclick="toggleTheme()">☀ Light</button>
   </header>
 
   <div class="disclaimer">
-    ⚠ <strong>Usage Disclaimer: </strong> The data and risk assessments generated by this model are strictly the results of a research study and do not constitute definitive medical advice or diagnosis. The application of these results in patient care must remain entirely under the primary clinical judgment of the attending physician.
+    ⚠ <strong>Usage Disclaimer:</strong> Research use only. Results do not constitute medical advice. Clinical judgment of the attending physician takes precedence.
   </div>
 
-  <div class="app-grid">
+  <!-- Mobile tab nav -->
+  <nav class="mobile-tabs" id="mobile-tabs">
+    <button class="mobile-tab active" data-tab="input">Patient Data</button>
+    <button class="mobile-tab" data-tab="results">Results</button>
+  </nav>
 
-    <!-- ── Input panel ── -->
-    <div class="input-panel">
-      <div class="panel-title">Patient data</div>
+  <div class="main-content">
 
-      <div class="section-sep">Clinical vitals</div>
+    <!-- Desktop wraps both views in a grid; mobile shows one at a time -->
+    <div class="desktop-grid">
 
-      <div class="field">
-        <label>Age (years)</label>
-        <input type="number" id="age" value="65" min="18" max="100">
-      </div>
-      <div class="field">
-        <label>Systolic BP (mmHg)</label>
-        <input type="number" id="sbp" value="140" min="60" max="260">
-      </div>
-      <div class="field">
-        <label>GCS total score (3–15)</label>
-        <input type="number" id="gcs" value="15" min="3" max="15">
-      </div>
-      <div class="field">
-        <label>The Lowest Motor Power Grading (0–5)</label>
-        <input type="number" id="motor" value="0" min="0" max="5">
-      </div>
+      <!-- ── INPUT TAB ── -->
+      <div class="tab-view active" id="tab-input">
+        <div class="input-panel">
+          <div class="panel-title">Patient data</div>
 
-      <div class="section-sep">Onset window</div>
-      <div class="field">
-        <div class="select-wrap">
-          <select id="onset">
-            <option value="0">&lt; 4.5 hours</option>
-            <option value="1">4.5 – 24 hours</option>
-            <option value="2">24 – 48 hours</option>
-            <option value="3">48 – 72 hours</option>
-          </select>
+          <div class="section-sep">Clinical vitals</div>
+          <div class="fields-2col">
+            <div class="field">
+              <label>Age (years)</label>
+              <input type="number" id="age" value="65" min="18" max="100">
+            </div>
+            <div class="field">
+              <label>Systolic BP (mmHg)</label>
+              <input type="number" id="sbp" value="140" min="60" max="260">
+            </div>
+            <div class="field">
+              <label>GCS score (3–15)</label>
+              <input type="number" id="gcs" value="15" min="3" max="15">
+            </div>
+            <div class="field">
+              <label>Motor power (0–5)</label>
+              <input type="number" id="motor" value="0" min="0" max="5">
+            </div>
+            <div class="field field-full">
+              <label>Onset window</label>
+              <div class="select-wrap">
+                <select id="onset">
+                  <option value="0">&lt; 4.5 hours</option>
+                  <option value="1">4.5 – 24 hours</option>
+                  <option value="2">24 – 48 hours</option>
+                  <option value="3">48 – 72 hours</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-sep">Risk history</div>
+          <div class="toggle-grid">
+            <div class="toggle-btn" data-key="bleeding_risk">Bleeding risk</div>
+            <div class="toggle-btn" data-key="athero_risk">Atherosclerosis</div>
+            <div class="toggle-btn" data-key="alcohol">Alcohol use</div>
+            <div class="toggle-btn" data-key="ht">Hypertension</div>
+            <div class="toggle-btn" data-key="dm">Diabetes</div>
+            <div class="toggle-btn" data-key="dlp">Dyslipidemia</div>
+            <div class="toggle-btn" data-key="cva">Prior stroke</div>
+            <div class="toggle-btn" data-key="cvd">Heart disease</div>
+            <div class="toggle-btn" data-key="smoking">Smoking</div>
+          </div>
+
+          <div class="section-sep">Neurological signs</div>
+          <div class="toggle-grid">
+            <div class="toggle-btn" data-key="weakness">Limb weakness</div>
+            <div class="toggle-btn" data-key="dysarthria">Dysarthria</div>
+            <div class="toggle-btn" data-key="facial_palsy">Facial palsy</div>
+            <div class="toggle-btn" data-key="aoc">Altered consciousness</div>
+            <div class="toggle-btn" data-key="sensory">Sensory deficit</div>
+            <div class="toggle-btn" data-key="aphasia">Aphasia</div>
+            <div class="toggle-btn" data-key="headache">Headache</div>
+            <div class="toggle-btn" data-key="other_neuro">Blur/Ataxia/Dizzy</div>
+          </div>
+
+          <!-- Desktop-only buttons (inside the panel) -->
+          <div class="desktop-btn-group">
+            <button class="predict-btn-inline" onclick="runPrediction()">Run prediction →</button>
+            <button class="reset-btn-inline" onclick="resetAll()">Reset all fields</button>
+          </div>
         </div>
-      </div>
+      </div><!-- /tab-input -->
 
-      <div class="section-sep">Risk history</div>
-      <div class="toggle-grid">
-        <div class="toggle-btn" data-key="bleeding_risk">Bleeding risk</div>
-        <div class="toggle-btn" data-key="athero_risk">Atherosclerosis</div>
-        <div class="toggle-btn" data-key="alcohol">Alcohol use</div>
-        <div class="toggle-btn" data-key="ht">Hypertension</div>
-        <div class="toggle-btn" data-key="dm">Diabetes</div>
-        <div class="toggle-btn" data-key="dlp">Dyslipidemia</div>
-        <div class="toggle-btn" data-key="cva">Prior stroke</div>
-        <div class="toggle-btn" data-key="cvd">Heart disease</div>
-        <div class="toggle-btn" data-key="smoking">Smoking</div>
-      </div>
+      <!-- ── RESULTS TAB ── -->
+      <div class="tab-view" id="tab-results">
+        <div class="results-panel" id="results-panel">
+          <div class="placeholder-card">
+            <div class="ph-icon">⚕</div>
+            <p>Enter patient data and tap<br><strong>Run prediction</strong> to see model comparison.</p>
+          </div>
+        </div>
 
-      <div class="section-sep">Neurological signs</div>
-      <div class="toggle-grid">
-        <div class="toggle-btn" data-key="weakness">Limb weakness</div>
-        <div class="toggle-btn" data-key="dysarthria">Dysarthria</div>
-        <div class="toggle-btn" data-key="facial_palsy">Facial palsy</div>
-        <div class="toggle-btn" data-key="aoc">Altered consciousness</div>
-        <div class="toggle-btn" data-key="sensory">Sensory deficit</div>
-        <div class="toggle-btn" data-key="aphasia">Aphasia</div>
-        <div class="toggle-btn" data-key="headache">Headache</div>
-        <div class="toggle-btn" data-key="other_neuro">Blurr / Ataxia / Dizzy</div>
-      </div>
+        <footer class="footer">
+          <p>Thresholds: LR 2.9% · RF 22.9% · XGBoost 13.7%</p>
+          <p>TRIPOD+AI (BMJ 2024) · Dataset: stroke_data_v7 (n=406, prevalence 23%)</p>
+        </footer>
+      </div><!-- /tab-results -->
 
-      <button class="predict-btn" onclick="runPrediction()">Run prediction →</button>
-      <button class="reset-btn" onclick="resetAll()">Reset all fields</button>
-    </div>
+    </div><!-- /desktop-grid -->
+  </div><!-- /main-content -->
 
-    <!-- ── Results panel ── -->
-    <div class="results-panel" id="results-panel">
-      <div class="placeholder-card">
-        <div class="ph-icon">⚕</div>
-        <p>Enter patient data on the left and click<br><strong>Run prediction</strong> to see model comparison.</p>
-      </div>
-    </div>
-
+  <!-- Mobile sticky action bar -->
+  <div class="bottom-action-bar">
+    <button class="predict-btn" onclick="runPrediction()">Run prediction →</button>
+    <button class="reset-btn" onclick="resetAll()">Reset</button>
   </div>
 
-  <footer class="footer">
-    <p>Model thresholds (high-sensitivity tuned): Logistic Regression 2.9% · Random Forest 22.9% · XGBoost 13.7%</p>
-    <p>Reference: TRIPOD+AI Statement (BMJ 2024) · Riley et al. (Stat Med 2019) · Dataset: stroke_data_v7 (n=406, prevalence 23%)</p>
-    <p>Built for GitHub Pages — pure HTML/CSS/JS, no server required. For production deployment, use R Shiny with the fitted RDS artifacts.</p>
-  </footer>
-
-</div>
+</div><!-- /container -->
 
 <script>
-// ── Theme toggle ──────────────────────────────────────────────────
+// ── Theme ─────────────────────────────────────────────────────────
 function toggleTheme() {
   const html = document.documentElement;
   const btn  = document.getElementById('theme-btn');
   const isDark = html.getAttribute('data-theme') === 'dark';
-  if (isDark) {
-    html.setAttribute('data-theme', 'light');
-    btn.textContent = '☽ Dark';
-    localStorage.setItem('theme', 'light');
-  } else {
-    html.setAttribute('data-theme', 'dark');
-    btn.textContent = '☀ Light';
-    localStorage.setItem('theme', 'dark');
-  }
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  btn.textContent = isDark ? '☽ Dark' : '☀ Light';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
 }
-
-// Restore saved theme preference on load
 (function() {
   const saved = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
@@ -839,7 +984,17 @@ function toggleTheme() {
   });
 })();
 
+// ── Mobile tabs ───────────────────────────────────────────────────
+document.querySelectorAll('.mobile-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
 
+// ── Toggle buttons ────────────────────────────────────────────────
 const state = {};
 document.querySelectorAll('.toggle-btn').forEach(btn => {
   const k = btn.dataset.key;
@@ -851,8 +1006,8 @@ document.querySelectorAll('.toggle-btn').forEach(btn => {
 });
 
 // ── Helpers ───────────────────────────────────────────────────────
-const sigmoid = x => 1 / (1 + Math.exp(-x));
-const pct = v => (v * 100).toFixed(1) + '%';
+const sigmoid  = x => 1 / (1 + Math.exp(-x));
+const pct      = v => (v * 100).toFixed(1) + '%';
 const pctPlain = v => (v * 100).toFixed(1);
 
 function getInputs() {
@@ -867,36 +1022,30 @@ function getInputs() {
 }
 
 // ── Model approximations ──────────────────────────────────────────
-// These replicate the directionality and relative weights from the R LASSO/RF/XGB
-// trained on stroke_data_v7. Exact probabilities require the fitted RDS objects.
-
 function predictLR(p) {
-  // Logistic regression: linear combination, low threshold (high sensitivity)
   let lp = -3.8;
-  lp += 0.035  * (p.age - 65);
-  lp += 0.018  * (p.sbp - 140);
-  lp -= 0.22   * (p.gcs - 15);
-  lp += 0.28   * p.motor;
-  lp += 1.10   * p.bleeding_risk;
-  lp += 0.65   * p.athero_risk;
-  lp += 0.55   * p.aoc;
-  lp += 0.45   * p.headache;
-  lp += 0.35   * p.other_neuro;
-  lp += 0.30   * p.sensory;
-  lp += 0.22   * p.alcohol;
-  lp += 0.18   * p.aphasia;
-  lp -= 0.28   * p.weakness;
-  lp += 0.15   * (p.onset / 3);
-  lp += 0.12   * p.cva;
-  lp += 0.10   * p.ht;
+  lp += 0.035 * (p.age - 65);
+  lp += 0.018 * (p.sbp - 140);
+  lp -= 0.22  * (p.gcs - 15);
+  lp += 0.28  * p.motor;
+  lp += 1.10  * p.bleeding_risk;
+  lp += 0.65  * p.athero_risk;
+  lp += 0.55  * p.aoc;
+  lp += 0.45  * p.headache;
+  lp += 0.35  * p.other_neuro;
+  lp += 0.30  * p.sensory;
+  lp += 0.22  * p.alcohol;
+  lp += 0.18  * p.aphasia;
+  lp -= 0.28  * p.weakness;
+  lp += 0.15  * (p.onset / 3);
+  lp += 0.12  * p.cva;
+  lp += 0.10  * p.ht;
   return sigmoid(lp);
 }
-
 function predictRF(p) {
-  // Random forest: ensemble, non-linear, highest threshold
   let s = 0.10;
-  s += Math.max(0, (p.age  - 55) / 45) * 0.12;
-  s += Math.max(0, (p.sbp  - 120) / 140) * 0.10;
+  s += Math.max(0, (p.age - 55) / 45) * 0.12;
+  s += Math.max(0, (p.sbp - 120) / 140) * 0.10;
   s += Math.max(0, (15 - p.gcs) / 12) * 0.18;
   s += (p.motor / 5) * 0.14;
   s += p.bleeding_risk * 0.18;
@@ -912,36 +1061,30 @@ function predictRF(p) {
   s -= p.weakness      * 0.04;
   return Math.min(Math.max(s, 0.02), 0.97);
 }
-
 function predictXGB(p) {
-  // XGBoost: gradient boosting, intermediate threshold, captures interactions
   let raw = -1.9;
-  raw += 0.38  * ((p.age   - 65) / 20);
-  raw += 0.30  * ((p.sbp   - 140) / 50);
-  raw -= 0.45  * ((p.gcs   - 15) / 12);
-  raw += 0.55  * (p.motor  / 5);
-  raw += 0.92  * p.bleeding_risk;
-  raw += 0.60  * p.athero_risk;
-  raw += 0.52  * p.aoc;
-  raw += 0.42  * p.headache;
-  raw += 0.36  * p.other_neuro;
-  raw += 0.30  * p.sensory;
-  raw += 0.25  * p.alcohol;
-  raw += 0.20  * p.aphasia;
-  raw -= 0.22  * p.weakness;
-  raw += 0.18  * (p.onset / 3);
-  raw += 0.14  * p.cva;
-  // Interaction: high SBP + bleeding_risk amplifies risk
+  raw += 0.38 * ((p.age  - 65) / 20);
+  raw += 0.30 * ((p.sbp  - 140) / 50);
+  raw -= 0.45 * ((p.gcs  - 15) / 12);
+  raw += 0.55 * (p.motor / 5);
+  raw += 0.92 * p.bleeding_risk;
+  raw += 0.60 * p.athero_risk;
+  raw += 0.52 * p.aoc;
+  raw += 0.42 * p.headache;
+  raw += 0.36 * p.other_neuro;
+  raw += 0.30 * p.sensory;
+  raw += 0.25 * p.alcohol;
+  raw += 0.20 * p.aphasia;
+  raw -= 0.22 * p.weakness;
+  raw += 0.18 * (p.onset / 3);
+  raw += 0.14 * p.cva;
   if (p.sbp > 180 && p.bleeding_risk) raw += 0.4;
-  // Interaction: low GCS + AOC
   if (p.gcs <= 8 && p.aoc) raw += 0.3;
   return sigmoid(raw);
 }
 
-// ── Thresholds from the R script (Section 7c) ─────────────────────
+// ── Thresholds & labels ───────────────────────────────────────────
 const THRESH = { lr: 0.029, rf: 0.229, xgb: 0.137 };
-
-// ── Risk level labels ─────────────────────────────────────────────
 const RISK_LABELS = { high: 'High Risk', mod: 'Moderate Risk', low: 'Low Risk' };
 
 function classify(prob, thresh) {
@@ -950,29 +1093,15 @@ function classify(prob, thresh) {
   return 'low';
 }
 
-// ── Feature pool for importance chips ────────────────────────────
+// ── Feature pool ──────────────────────────────────────────────────
 const FEATURE_POOL = [
-  { label: 'SBP',                  note: 'Systolic blood pressure' },
-  { label: 'GCS score',            note: 'Level of consciousness' },
-  { label: 'Age',                  note: 'Patient age' },
-  { label: 'Motor grade',          note: 'Weakness severity' },
-  { label: 'Alcohol use',          note: 'Drinking history' },
-  { label: 'Bleeding risk',        note: 'Coagulopathy / anticoagulants' },
-  { label: 'Atherosclerosis',      note: 'Vascular risk factor' },
-  { label: 'Altered consciousness',note: 'AOC on arrival' },
-  { label: 'Hypertension',         note: 'Chronic HT history' },
-  { label: 'Limb weakness',        note: 'Motor deficit' },
-  { label: 'Dysarthria',           note: 'Speech impairment' },
-  { label: 'Facial palsy',         note: 'CN VII involvement' },
-  { label: 'Prior stroke',         note: 'CVA history' },
-  { label: 'Diabetes',             note: 'DM history' },
-  { label: 'Dyslipidemia',         note: 'Lipid disorder' },
-  { label: 'Smoking',              note: 'Tobacco use' },
-  { label: 'Headache',             note: 'Presenting symptom' },
-  { label: 'Onset window',         note: 'Time from symptom start' },
+  { label: 'SBP' }, { label: 'GCS score' }, { label: 'Age' },
+  { label: 'Motor grade' }, { label: 'Alcohol use' }, { label: 'Bleeding risk' },
+  { label: 'Atherosclerosis' }, { label: 'Altered consciousness' }, { label: 'Hypertension' },
+  { label: 'Limb weakness' }, { label: 'Dysarthria' }, { label: 'Facial palsy' },
+  { label: 'Prior stroke' }, { label: 'Diabetes' }, { label: 'Dyslipidemia' },
+  { label: 'Smoking' }, { label: 'Headache' }, { label: 'Onset window' },
 ];
-
-// Seeded shuffle — deterministic per model so features don't change on re-render
 function seededFeatures(seed, n) {
   const arr = [...FEATURE_POOL];
   let s = seed;
@@ -984,17 +1113,24 @@ function seededFeatures(seed, n) {
   return arr.slice(0, n);
 }
 
-// ── Main prediction function ──────────────────────────────────────
+// ── Render helpers ────────────────────────────────────────────────
+const rpClass = r => r === 'high' ? 'rp-high' : r === 'mod' ? 'rp-mod' : 'rp-low';
+const pvClass = r => r === 'high' ? 'pv-high' : r === 'mod' ? 'pv-mod' : 'pv-low';
+const miniBar = (val, color) =>
+  `<div class="mdc-mbar-track"><div class="mdc-mbar-fill" style="width:${(val*100).toFixed(0)}%;background:${color}"></div></div>`;
+const aurStripBar = (val, color) =>
+  `<div class="auroc-tile-bar-track"><div class="auroc-tile-bar-fill" style="width:${(val*100).toFixed(1)}%;background:${color}"></div></div>`;
+const rankClass = i => ['mdc-rank-1','mdc-rank-2','mdc-rank-3'][i];
+
+// ── Main prediction ───────────────────────────────────────────────
 function runPrediction() {
   const p    = getInputs();
   const lrP  = predictLR(p);
   const rfP  = predictRF(p);
   const xgbP = predictXGB(p);
-
   const lrR  = classify(lrP,  THRESH.lr);
   const rfR  = classify(rfP,  THRESH.rf);
   const xgbR = classify(xgbP, THRESH.xgb);
-
   const avgP = (lrP + rfP + xgbP) / 3;
   const highN = [lrR, rfR, xgbR].filter(r => r === 'high').length;
   const modN  = [lrR, rfR, xgbR].filter(r => r === 'mod').length;
@@ -1014,25 +1150,23 @@ function runPrediction() {
     desc = 'All three models predict probability below their respective clinical thresholds. Hemorrhage is less likely based on current inputs. Standard stroke workup and monitoring apply.';
   }
 
-  // ── Active risk factors for display ──
   const FACTOR_MAP = [
-    { key: 'bleeding_risk', label: 'Bleeding risk',          weight: 'high' },
-    { key: 'aoc',           label: 'Altered consciousness',  weight: 'high' },
-    { key: 'athero_risk',   label: 'Atherosclerosis',        weight: 'high' },
-    { key: 'headache',      label: 'Headache present',       weight: 'mod'  },
-    { key: 'other_neuro',   label: 'Blurr / Ataxia / Dizzy',weight: 'mod'  },
-    { key: 'sensory',       label: 'Sensory deficit',        weight: 'mod'  },
-    { key: 'alcohol',       label: 'Alcohol use',            weight: 'mod'  },
-    { key: 'aphasia',       label: 'Aphasia',                weight: 'mod'  },
-    { key: 'cva',           label: 'Prior stroke',           weight: 'low'  },
-    { key: 'ht',            label: 'Hypertension',           weight: 'low'  },
-    { key: 'dm',            label: 'Diabetes',               weight: 'low'  },
-    { key: 'smoking',       label: 'Smoking',                weight: 'low'  },
-    { key: 'weakness',      label: 'Limb weakness',          weight: 'protective' },
+    { key: 'bleeding_risk', label: 'Bleeding risk',           weight: 'high' },
+    { key: 'aoc',           label: 'Altered consciousness',   weight: 'high' },
+    { key: 'athero_risk',   label: 'Atherosclerosis',         weight: 'high' },
+    { key: 'headache',      label: 'Headache present',        weight: 'mod'  },
+    { key: 'other_neuro',   label: 'Blur / Ataxia / Dizzy',  weight: 'mod'  },
+    { key: 'sensory',       label: 'Sensory deficit',         weight: 'mod'  },
+    { key: 'alcohol',       label: 'Alcohol use',             weight: 'mod'  },
+    { key: 'aphasia',       label: 'Aphasia',                 weight: 'mod'  },
+    { key: 'cva',           label: 'Prior stroke',            weight: 'low'  },
+    { key: 'ht',            label: 'Hypertension',            weight: 'low'  },
+    { key: 'dm',            label: 'Diabetes',                weight: 'low'  },
+    { key: 'smoking',       label: 'Smoking',                 weight: 'low'  },
+    { key: 'weakness',      label: 'Limb weakness',           weight: 'protective' },
   ];
   const activeFactors = FACTOR_MAP.filter(f => p[f.key]);
 
-  // ── Model metadata ────────────────────────────────────────────
   const MODELS = [
     {
       name: 'Logistic Regression', engine: 'GLM · glmnet (LASSO)',
@@ -1040,8 +1174,7 @@ function runPrediction() {
       note: 'High sensitivity · low threshold (2.9%)',
       color: '#378ADD',
       auroc: 0.736, auroc_lo: 0.567, auroc_hi: 0.905,
-      auprc: 0.612, auprc_lo: 0.352, auprc_hi: 0.810,
-      acc: 0.684, prec: 0.481, recall: 0.942, f1: 0.638,
+      auprc: 0.612, acc: 0.684, prec: 0.481, recall: 0.942, f1: 0.638,
       featSeed: 42,
     },
     {
@@ -1050,8 +1183,7 @@ function runPrediction() {
       note: 'Balanced specificity · threshold 22.9%',
       color: '#639922',
       auroc: 0.811, auroc_lo: 0.709, auroc_hi: 0.912,
-      auprc: 0.549, auprc_lo: 0.307, auprc_hi: 0.755,
-      acc: 0.793, prec: 0.481, recall: 0.796, f1: 0.601,
+      auprc: 0.549, acc: 0.793, prec: 0.481, recall: 0.796, f1: 0.601,
       featSeed: 77,
     },
     {
@@ -1060,51 +1192,33 @@ function runPrediction() {
       note: 'Captures interactions · threshold 13.7%',
       color: '#BA7517',
       auroc: 0.781, auroc_lo: 0.669, auroc_hi: 0.893,
-      auprc: 0.403, auprc_lo: 0.206, auprc_hi: 0.687,
-      acc: 0.741, prec: 0.390, recall: 0.882, f1: 0.541,
+      auprc: 0.403, acc: 0.741, prec: 0.390, recall: 0.882, f1: 0.541,
       featSeed: 13,
     },
   ];
 
-  // ── Helpers for rendering ─────────────────────────────────────
-  const chipHtml = r => `<span class="chip chip-${r === 'high' ? 'high' : r === 'mod' ? 'mod' : 'low'}">${RISK_LABELS[r]}</span>`;
-
-  const rpClass  = r => r === 'high' ? 'rp-high' : r === 'mod' ? 'rp-mod' : 'rp-low';
-  const pvClass  = r => r === 'high' ? 'pv-high' : r === 'mod' ? 'pv-mod' : 'pv-low';
-
-  const miniBar  = (val, color) =>
-    `<div class="mdc-mbar-track"><div class="mdc-mbar-fill" style="width:${(val*100).toFixed(0)}%;background:${color}"></div></div>`;
-
-  const aurStripBar = (val, color) =>
-    `<div class="auroc-tile-bar-track"><div class="auroc-tile-bar-fill" style="width:${(val*100).toFixed(1)}%;background:${color}"></div></div>`;
-
-  const rankClass = i => ['mdc-rank-1','mdc-rank-2','mdc-rank-3'][i];
-
-  // ── Render ─────────────────────────────────────────────────────
   const panel = document.getElementById('results-panel');
-
   panel.innerHTML = `
 
-    <!-- ① Probability cards (existing design — kept) -->
-    <div class="model-cards-row">
+    <!-- ① Probability cards -->
+    <div class="model-cards-scroll">
       ${MODELS.map(m => `
         <div class="model-card risk-${m.risk}">
           <div class="mc-engine">${m.engine}</div>
           <div class="mc-prob c-${m.risk}">${pctPlain(m.prob)}%</div>
           <div class="mc-badge b-${m.risk}">${RISK_LABELS[m.risk]}</div>
           <div class="mc-meta">${m.name}</div>
-          <div class="mc-thresh">Decision threshold: ${(m.thresh*100).toFixed(1)}%</div>
+          <div class="mc-thresh">Threshold: ${(m.thresh*100).toFixed(1)}%</div>
         </div>
       `).join('')}
     </div>
 
-    <!-- ② Gauge bars (existing design — kept) -->
+    <!-- ② Gauge bars -->
     <div class="gauge-card">
       <div class="gauge-title">Predicted probability vs threshold</div>
-
       ${MODELS.map((m, i) => {
-        const gClass = ['gf-lr','gf-rf','gf-xgb'][i];
-        const gColor = ['#185FA5','#3B6D11','#854F0B'][i];
+        const gClass  = ['gf-lr','gf-rf','gf-xgb'][i];
+        const gColor  = ['#185FA5','#3B6D11','#854F0B'][i];
         const gmClass = ['gauge-model-lr','gauge-model-rf','gauge-model-xgb'][i];
         return `
         <div class="gauge-row">
@@ -1123,18 +1237,18 @@ function runPrediction() {
       }).join('')}
     </div>
 
-    <!-- ③ Consensus (existing design — kept) -->
+    <!-- ③ Consensus -->
     <div class="consensus-card">
       <div class="consensus-label">Clinical consensus</div>
       <div class="consensus-verdict" style="color:${verdictColor}">${verdict}</div>
       <div class="consensus-desc">${desc}</div>
       <div class="avg-prob">
-        Average predicted probability across all three models: <strong>${pct(avgP)}</strong>
+        Average probability: <strong>${pct(avgP)}</strong>
         &nbsp;·&nbsp; Models above threshold: <strong>${[lrR,rfR,xgbR].filter(r=>r!=='low').length} / 3</strong>
       </div>
     </div>
 
-    <!-- ④ Active factors (existing design — kept) -->
+    <!-- ④ Active factors -->
     <div class="factors-card">
       <div class="factors-label">Risk factor summary (${activeFactors.length} active)</div>
       ${activeFactors.length === 0
@@ -1145,91 +1259,109 @@ function runPrediction() {
       }
     </div>
 
-    <!-- ⑤ Model Detail Table — new rich card design ──────────────── -->
-    <div class="metrics-card">
-
-      <div class="mdt-header">
-        <div class="metrics-label" style="margin-bottom:0">Model detail comparison</div>
-        <span class="mdt-badge">✓ 3 models run</span>
+    <!-- ⑤ Model detail comparison — COLLAPSIBLE (default: collapsed) -->
+    <div class="metrics-card" id="metrics-card">
+      <div class="mdt-toggle-header" onclick="toggleModelDetail()" role="button" aria-expanded="false" aria-controls="mdt-body">
+        <div class="mdt-header-left">
+          <span class="metrics-label">Model detail comparison</span>
+          <span class="mdt-badge">✓ 3 models run</span>
+        </div>
+        <span class="mdt-chevron">▾</span>
       </div>
 
-      <!-- AUROC strip -->
-      <div class="auroc-strip">
-        ${MODELS.map(m => `
-          <div class="auroc-tile">
-            <div class="auroc-tile-label">${m.name} — AUROC</div>
-            <div class="auroc-tile-val" style="color:${m.color}">${m.auroc.toFixed(3)}</div>
-            ${aurStripBar(m.auroc, m.color)}
-            <div class="auroc-tile-ci">95% CI: ${m.auroc_lo.toFixed(3)} – ${m.auroc_hi.toFixed(3)}</div>
-          </div>
-        `).join('')}
-      </div>
+      <div class="mdt-body" id="mdt-body" role="region">
+        <div class="mdt-body-inner">
 
-      <!-- Main model detail cards -->
-      <div class="mdc-grid">
-        ${MODELS.map(m => {
-          const feats = seededFeatures(m.featSeed, 3);
-          const metrics = [
-            { label: 'Accuracy',  val: m.acc  },
-            { label: 'Precision', val: m.prec },
-            { label: 'Recall',    val: m.recall },
-            { label: 'F1-score',  val: m.f1   },
-            { label: 'AUPRC',     val: m.auprc },
-          ];
-          return `
-          <div class="mdc">
-            <div class="mdc-head">
-              <div>
-                <div class="mdc-name" style="color:${m.color}">${m.name}</div>
-                <div class="mdc-engine">${m.engine}</div>
-              </div>
-              <span class="mdc-risk-pill ${rpClass(m.risk)}">${RISK_LABELS[m.risk]}</span>
-            </div>
-
-            <div class="mdc-prob-row">
-              <div class="mdc-prob-label">Predicted risk</div>
-              <div class="mdc-prob-val ${pvClass(m.risk)}">${pctPlain(m.prob)}%</div>
-              <div class="mdc-prob-note">${m.note}</div>
-            </div>
-
-            <hr class="mdc-divider">
-
-            ${metrics.map(mx => `
-              <div class="mdc-metric-row">
-                <span class="mdc-metric-label">${mx.label}</span>
-                <div class="mdc-metric-right">
-                  ${miniBar(mx.val, m.color)}
-                  <span class="mdc-metric-val">${(mx.val*100).toFixed(1)}%</span>
-                </div>
+          <!-- AUROC strip -->
+          <div class="auroc-strip">
+            ${MODELS.map(m => `
+              <div class="auroc-tile">
+                <div class="auroc-tile-label">${m.name} — AUROC</div>
+                <div class="auroc-tile-val" style="color:${m.color}">${m.auroc.toFixed(3)}</div>
+                ${aurStripBar(m.auroc, m.color)}
+                <div class="auroc-tile-ci">95% CI: ${m.auroc_lo.toFixed(3)} – ${m.auroc_hi.toFixed(3)}</div>
               </div>
             `).join('')}
+          </div>
 
-            <hr class="mdc-divider">
+          <!-- Model detail cards -->
+          <div class="mdc-grid">
+            ${MODELS.map(m => {
+              const feats = seededFeatures(m.featSeed, 3);
+              const metrics = [
+                { label: 'Accuracy',  val: m.acc    },
+                { label: 'Precision', val: m.prec   },
+                { label: 'Recall',    val: m.recall  },
+                { label: 'F1-score',  val: m.f1     },
+                { label: 'AUPRC',     val: m.auprc  },
+              ];
+              return `
+              <div class="mdc">
+                <div class="mdc-head">
+                  <div>
+                    <div class="mdc-name" style="color:${m.color}">${m.name}</div>
+                    <div class="mdc-engine">${m.engine}</div>
+                  </div>
+                  <span class="mdc-risk-pill ${rpClass(m.risk)}">${RISK_LABELS[m.risk]}</span>
+                </div>
+                <div class="mdc-prob-row">
+                  <div class="mdc-prob-label">Predicted risk</div>
+                  <div class="mdc-prob-val ${pvClass(m.risk)}">${pctPlain(m.prob)}%</div>
+                  <div class="mdc-prob-note">${m.note}</div>
+                </div>
+                <hr class="mdc-divider">
+                ${metrics.map(mx => `
+                  <div class="mdc-metric-row">
+                    <span class="mdc-metric-label">${mx.label}</span>
+                    <div class="mdc-metric-right">
+                      ${miniBar(mx.val, m.color)}
+                      <span class="mdc-metric-val">${(mx.val*100).toFixed(1)}%</span>
+                    </div>
+                  </div>
+                `).join('')}
+                <hr class="mdc-divider">
+                <div class="mdc-feat-label">Top feature importances</div>
+                <div class="mdc-feat-chips">
+                  ${feats.map((f, i) => `
+                    <span class="mdc-feat-chip">
+                      <span class="mdc-rank ${rankClass(i)}">${i+1}</span>
+                      ${f.label}
+                    </span>
+                  `).join('')}
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
 
-            <div class="mdc-feat-label">Top feature importances</div>
-            <div class="mdc-feat-chips">
-              ${feats.map((f, i) => `
-                <span class="mdc-feat-chip">
-                  <span class="mdc-rank ${rankClass(i)}">${i+1}</span>
-                  ${f.label}
-                </span>
-              `).join('')}
+          <!-- Research disclaimer -->
+          <div class="mdt-disclaimer">
+            <span class="mdt-disclaimer-icon">⚠</span>
+            <div class="mdt-disclaimer-body">
+              <strong>Disclaimer:</strong> This ML model was developed exclusively for statistical demonstration and research purposes. Output must not substitute professional medical evaluation or clinical judgment by a qualified healthcare provider.
             </div>
-          </div>`;
-        }).join('')}
-      </div>
+          </div>
 
-      <!-- Research disclaimer -->
-      <div class="mdt-disclaimer">
-        <span class="mdt-disclaimer-icon">⚠</span>
-        <div class="mdt-disclaimer-body">
-          <strong>Disclaimer:</strong> This Machine Learning model was developed exclusively for statistical demonstration and research purposes. The output from this model must not be used as a substitute for professional medical evaluation, diagnosis, or clinical judgment by a qualified healthcare provider.
-        </div>
-      </div>
-
-    </div>
+        </div><!-- /mdt-body-inner -->
+      </div><!-- /mdt-body -->
+    </div><!-- /metrics-card -->
 
   `;
+
+  // Switch to results tab on mobile after running
+  if (window.innerWidth < 780) {
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+    document.querySelector('[data-tab="results"]').classList.add('active');
+    document.getElementById('tab-results').classList.add('active');
+  }
+}
+
+// ── Toggle Model Detail panel ─────────────────────────────────────
+function toggleModelDetail() {
+  const card   = document.getElementById('metrics-card');
+  const header = card.querySelector('.mdt-toggle-header');
+  const isExp  = card.classList.toggle('expanded');
+  header.setAttribute('aria-expanded', isExp);
 }
 
 // ── Reset ─────────────────────────────────────────────────────────
@@ -1246,8 +1378,16 @@ function resetAll() {
   document.getElementById('results-panel').innerHTML = `
     <div class="placeholder-card">
       <div class="ph-icon">⚕</div>
-      <p>Enter patient data on the left and click<br><strong>Run prediction</strong> to see model comparison.</p>
+      <p>Enter patient data and tap<br><strong>Run prediction</strong> to see model comparison.</p>
     </div>`;
+
+  // Go back to input tab on mobile
+  if (window.innerWidth < 780) {
+    document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+    document.querySelector('[data-tab="input"]').classList.add('active');
+    document.getElementById('tab-input').classList.add('active');
+  }
 }
 </script>
 
