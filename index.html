@@ -269,7 +269,7 @@
   }
   .page-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
 
-  #theme-btn {
+  #theme-btn, #lang-btn {
     padding: 6px 12px;
     font-family: 'DM Sans', sans-serif;
     font-size: 11px;
@@ -282,6 +282,9 @@
     transition: all .2s;
     white-space: nowrap;
     flex-shrink: 0;
+  }
+  #theme-btn:hover, #lang-btn:hover {
+    background: var(--surface);
   }
 
   /* ── Disclaimer ─────────────────────────────────────────────── */
@@ -1139,19 +1142,18 @@
   <header class="page-header">
     <div>
       <div class="page-title" data-i18n="pageTitle">Hemorrhagic Stroke Risk Predictor</div>
-      <div class="page-sub" data-i18n="pageSub">Acute stroke · Onset &lt;72 h · Three-model comparison (LR · RF · XGBoost)</div>
+      <div class="page-sub" data-i18n="pageSub">Acute Stroke Assessment · Onset &lt;72h · Tri-Model Ensemble (LR · RF · XGBoost)</div>
     </div>
     <div style="display:flex;gap:.5rem;align-items:center;">
-      <button id="lang-btn" onclick="toggleLang()" style="font-size:13px;padding:5px 12px;border:1px solid var(--border);border-radius:99px;background:var(--surface2);color:var(--text);cursor:pointer;font-family:inherit;font-weight:500;">🇹🇭 TH</button>
+      <button id="lang-btn" onclick="toggleLang()">TH</button>
       <button id="theme-btn" onclick="toggleTheme()">☽ Dark</button>
     </div>
   </header>
 
   <div class="disclaimer" data-i18n="disclaimer">
-    ⚠ <strong>Usage Disclaimer:</strong> Research use only. Results do not constitute medical advice. Clinical judgment of the attending physician takes precedence.
+    ⚠ <strong>Clinical Disclaimer:</strong> For research and demonstration purposes only. Results do not constitute medical advice. The attending physician's clinical judgment always takes precedence.
   </div>
 
-  <!-- ── Info panel ── -->
   <div class="info-panel" id="info-panel">
     <div class="info-panel-header" onclick="toggleInfo()">
       <span class="info-panel-title" data-i18n="guideTitle">ℹ Guide &amp; Interpretation</span>
@@ -1160,7 +1162,6 @@
     <div class="info-panel-body">
       <div class="info-panel-inner">
 
-        <!-- 1. How to Use -->
         <div class="info-acc" id="acc-how">
           <div class="info-acc-hd" onclick="toggleAcc('acc-how')">
             <span class="acc-icon">📋</span> <span data-i18n="guideHowTitle">How to Use</span>
@@ -1171,7 +1172,6 @@
           </div>
         </div>
 
-        <!-- 2. Result Interpretation -->
         <div class="info-acc" id="acc-result">
           <div class="info-acc-hd" onclick="toggleAcc('acc-result')">
             <span class="acc-icon">📊</span> <span data-i18n="guideResultTitle">Result Interpretation</span>
@@ -1182,7 +1182,6 @@
           </div>
         </div>
 
-        <!-- 3. Important Information -->
         <div class="info-acc" id="acc-info">
           <div class="info-acc-hd" onclick="toggleAcc('acc-info')">
             <span class="acc-icon">⚠️</span> <span data-i18n="guideInfoTitle">Important Information</span>
@@ -1193,46 +1192,39 @@
           </div>
         </div>
 
-      </div><!-- /info-panel-inner -->
-    </div><!-- /info-panel-body -->
-  </div><!-- /info-panel -->
-
-  <!-- Mobile tab nav -->
-  <nav class="mobile-tabs" id="mobile-tabs">
-    <button class="mobile-tab active" data-tab="input" data-i18n="tabInput">Patient Data</button>
-    <button class="mobile-tab" data-tab="results" data-i18n="tabResults">Results</button>
+      </div></div></div><nav class="mobile-tabs" id="mobile-tabs">
+    <button class="mobile-tab active" data-tab="input" data-i18n="tabInput">Clinical Inputs</button>
+    <button class="mobile-tab" data-tab="results" data-i18n="tabResults">Risk Assessment</button>
   </nav>
 
   <div class="main-content">
 
-    <!-- Desktop wraps both views in a grid; mobile shows one at a time -->
     <div class="desktop-grid">
 
-      <!-- ── INPUT TAB ── -->
       <div class="tab-view active" id="tab-input">
         <div class="input-panel">
-          <div class="panel-title" data-i18n="panelTitle">Patient data</div>
+          <div class="panel-title" data-i18n="panelTitle">Clinical Parameters</div>
 
-          <div class="section-sep" data-i18n="secVitals">Clinical vitals</div>
+          <div class="section-sep" data-i18n="secVitals">Vitals & Demographics</div>
           <div class="fields-2col">
             <div class="field">
               <label data-i18n="labelAge">Age (years)</label>
               <input type="number" id="age" value="65" min="18" max="100">
             </div>
             <div class="field">
-              <label data-i18n="labelSBP">Systolic BP (mmHg)</label>
+              <label data-i18n="labelSBP">Initial Systolic BP (mmHg)</label>
               <input type="number" id="sbp" value="140" min="60" max="260">
             </div>
             <div class="field">
-              <label data-i18n="labelGCS">GCS Total Score (3–15)</label>
+              <label data-i18n="labelGCS">Initial GCS Score (3–15)</label>
               <input type="number" id="gcs" value="15" min="3" max="15">
             </div>
             <div class="field">
-              <label data-i18n="labelMotor">The Lowest Motor Power Grading (0–5)</label>
+              <label data-i18n="labelMotor">Lowest Motor Power Grade (0–5)</label>
               <input type="number" id="motor" value="0" min="0" max="5">
             </div>
             <div class="field field-full">
-              <label data-i18n="labelOnset">Onset window</label>
+              <label data-i18n="labelOnset">Time Since Symptom Onset</label>
               <div class="select-wrap">
                 <select id="onset">
                   <option value="0" data-i18n="onset0">&lt; 4.5 hours</option>
@@ -1244,45 +1236,41 @@
             </div>
           </div>
 
-          <div class="section-sep" data-i18n="secRisk">Risk history</div>
+          <div class="section-sep" data-i18n="secRisk">Medical History & Risk Factors</div>
           <div class="toggle-grid">
-            <div class="toggle-btn" data-key="bleeding_risk" data-i18n="fBleedingRisk">Bleeding Risk</div>
+            <div class="toggle-btn" data-key="bleeding_risk" data-i18n="fBleedingRisk">Bleeding Diathesis / Risk</div>
             <div class="toggle-btn" data-key="athero_risk" data-i18n="fAthero">Atherosclerosis Risk</div>
-            <div class="toggle-btn" data-key="alcohol" data-i18n="fAlcohol">Alcohol Use</div>
-            <div class="toggle-btn" data-key="ht" data-i18n="fHT">Hypertension</div>
-            <div class="toggle-btn" data-key="dm" data-i18n="fDM">Diabetes</div>
+            <div class="toggle-btn" data-key="alcohol" data-i18n="fAlcohol">Active Alcohol Use</div>
+            <div class="toggle-btn" data-key="ht" data-i18n="fHT">History of Hypertension</div>
+            <div class="toggle-btn" data-key="dm" data-i18n="fDM">Diabetes Mellitus</div>
             <div class="toggle-btn" data-key="dlp" data-i18n="fDLP">Dyslipidemia</div>
-            <div class="toggle-btn" data-key="cva" data-i18n="fCVA">Prior Stroke</div>
-            <div class="toggle-btn" data-key="cvd" data-i18n="fCVD">Heart Disease</div>
-            <div class="toggle-btn" data-key="smoking" data-i18n="fSmoking">Smoking</div>
+            <div class="toggle-btn" data-key="cva" data-i18n="fCVA">Prior Stroke / TIA</div>
+            <div class="toggle-btn" data-key="cvd" data-i18n="fCVD">Cardiovascular Disease</div>
+            <div class="toggle-btn" data-key="smoking" data-i18n="fSmoking">Active Smoking</div>
           </div>
 
-          <div class="section-sep" data-i18n="secNeuro">Neurological signs</div>
+          <div class="section-sep" data-i18n="secNeuro">Presenting Neurological Signs</div>
           <div class="toggle-grid">
-            <div class="toggle-btn" data-key="weakness" data-i18n="fWeakness">Limb weakness</div>
+            <div class="toggle-btn" data-key="weakness" data-i18n="fWeakness">Focal Limb Weakness</div>
             <div class="toggle-btn" data-key="dysarthria" data-i18n="fDysarthria">Dysarthria</div>
-            <div class="toggle-btn" data-key="facial_palsy" data-i18n="fFacial">Facial palsy</div>
-            <div class="toggle-btn" data-key="aoc" data-i18n="fAOC">Altered consciousness</div>
-            <div class="toggle-btn" data-key="sensory" data-i18n="fSensory">Sensory deficit</div>
+            <div class="toggle-btn" data-key="facial_palsy" data-i18n="fFacial">Facial Palsy / Droop</div>
+            <div class="toggle-btn" data-key="aoc" data-i18n="fAOC">Altered Level of Consciousness</div>
+            <div class="toggle-btn" data-key="sensory" data-i18n="fSensory">Sensory Deficit</div>
             <div class="toggle-btn" data-key="aphasia" data-i18n="fAphasia">Aphasia</div>
-            <div class="toggle-btn" data-key="headache" data-i18n="fHeadache">Headache</div>
-            <div class="toggle-btn" data-key="other_neuro" data-i18n="fOtherNeuro">Blurred vision/Ataxia/Dizziness</div>
+            <div class="toggle-btn" data-key="headache" data-i18n="fHeadache">Acute Headache</div>
+            <div class="toggle-btn" data-key="other_neuro" data-i18n="fOtherNeuro">Visual Disturbance / Ataxia / Vertigo</div>
           </div>
 
-          <!-- Desktop-only buttons (inside the panel) -->
           <div class="desktop-btn-group">
-            <button class="predict-btn-inline" onclick="runPrediction()" data-i18n="btnRun">Run prediction →</button>
-            <button class="reset-btn-inline" onclick="resetAll()" data-i18n="btnReset">Reset all fields</button>
+            <button class="predict-btn-inline" onclick="runPrediction()" data-i18n="btnRun">Execute Risk Assessment →</button>
+            <button class="reset-btn-inline" onclick="resetAll()" data-i18n="btnReset">Clear Clinical Data</button>
           </div>
         </div>
-      </div><!-- /tab-input -->
-
-      <!-- ── RESULTS TAB ── -->
-      <div class="tab-view" id="tab-results">
+      </div><div class="tab-view" id="tab-results">
         <div class="results-panel" id="results-panel">
           <div class="placeholder-card">
             <div class="ph-icon">⚕</div>
-            <p data-i18n="placeholder">Enter patient data and tap<br><strong>Run prediction</strong> to see model comparison.</p>
+            <p data-i18n="placeholder">Input clinical parameters and select<br><strong>Execute Risk Assessment</strong> to generate the ensemble model comparison.</p>
           </div>
         </div>
 
@@ -1290,27 +1278,18 @@
           <p>Thresholds: LR 2.9% · RF 22.9% · XGBoost 13.7%</p>
           <p>TRIPOD+AI (BMJ 2024) · Dataset: stroke_data_v7 (n=406, prevalence 23%)</p>
         </footer>
-      </div><!-- /tab-results -->
-
-    </div><!-- /desktop-grid -->
-  </div><!-- /main-content -->
-
-  <!-- Mobile sticky action bar -->
-  <div class="bottom-action-bar">
-    <button class="predict-btn" onclick="runPrediction()" data-i18n="btnRun">Run prediction →</button>
-    <button class="reset-btn" onclick="resetAll()" data-i18n="btnResetShort">Reset</button>
+      </div></div></div><div class="bottom-action-bar">
+    <button class="predict-btn" onclick="runPrediction()" data-i18n="btnRun">Execute Risk Assessment →</button>
+    <button class="reset-btn" onclick="resetAll()" data-i18n="btnResetShort">Clear</button>
   </div>
 
-  <!-- GitHub link -->
   <a href="https://github.com/Phoblaz/Stroke-Predictor" target="_blank" rel="noopener" class="github-fab" title="View on GitHub">
     <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" aria-hidden="true">
       <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
     </svg>
   </a>
 
-</div><!-- /container -->
-
-<script>
+</div><script>
 // ── Info panel ────────────────────────────────────────────────────
 function toggleInfo() {
   document.getElementById('info-panel').classList.toggle('open');
@@ -1325,165 +1304,165 @@ let currentLang = localStorage.getItem('lang') || 'en';
 const TRANSLATIONS = {
   en: {
     pageTitle: 'Hemorrhagic Stroke Risk Predictor',
-    pageSub: 'Acute stroke · Onset &lt;72 h · Three-model comparison (LR · RF · XGBoost)',
-    disclaimer: '⚠ <strong>Usage Disclaimer:</strong> Research use only. Results do not constitute medical advice. Clinical judgment of the attending physician takes precedence.',
-    tabInput: 'Patient Data',
-    tabResults: 'Results',
-    panelTitle: 'Patient data',
-    secVitals: 'Clinical vitals',
+    pageSub: 'Acute Stroke Assessment · Onset &lt;72h · Tri-Model Ensemble (LR · RF · XGBoost)',
+    disclaimer: '⚠ <strong>Clinical Disclaimer:</strong> For research and demonstration purposes only. Results do not constitute medical advice. The attending physician\'s clinical judgment always takes precedence.',
+    tabInput: 'Clinical Inputs',
+    tabResults: 'Risk Assessment',
+    panelTitle: 'Clinical Parameters',
+    secVitals: 'Vitals & Demographics',
     labelAge: 'Age (years)',
-    labelSBP: 'Systolic BP (mmHg)',
-    labelGCS: 'GCS Total Score (3–15)',
-    labelMotor: 'The Lowest Motor Power Grading (0–5)',
-    labelOnset: 'Onset window',
+    labelSBP: 'Initial Systolic BP (mmHg)',
+    labelGCS: 'Initial GCS Score (3–15)',
+    labelMotor: 'Lowest Motor Power Grade (0–5)',
+    labelOnset: 'Time Since Symptom Onset',
     onset0: '< 4.5 hours',
     onset1: '4.5 – 24 hours',
     onset2: '24 – 48 hours',
     onset3: '48 – 72 hours',
-    secRisk: 'Risk history',
-    fBleedingRisk: 'Bleeding Risk',
+    secRisk: 'Medical History & Risk Factors',
+    fBleedingRisk: 'Bleeding Diathesis / Risk',
     fAthero: 'Atherosclerosis Risk',
-    fAlcohol: 'Alcohol Use',
-    fHT: 'Hypertension',
-    fDM: 'Diabetes',
+    fAlcohol: 'Active Alcohol Use',
+    fHT: 'History of Hypertension',
+    fDM: 'Diabetes Mellitus',
     fDLP: 'Dyslipidemia',
-    fCVA: 'Prior Stroke',
-    fCVD: 'Heart Disease',
-    fSmoking: 'Smoking',
-    secNeuro: 'Neurological signs',
-    fWeakness: 'Limb weakness',
+    fCVA: 'Prior Stroke / TIA',
+    fCVD: 'Cardiovascular Disease',
+    fSmoking: 'Active Smoking',
+    secNeuro: 'Presenting Neurological Signs',
+    fWeakness: 'Focal Limb Weakness',
     fDysarthria: 'Dysarthria',
-    fFacial: 'Facial palsy',
-    fAOC: 'Altered consciousness',
-    fSensory: 'Sensory deficit',
+    fFacial: 'Facial Palsy / Droop',
+    fAOC: 'Altered Level of Consciousness',
+    fSensory: 'Sensory Deficit',
     fAphasia: 'Aphasia',
-    fHeadache: 'Headache',
-    fOtherNeuro: 'Blurred vision/Ataxia/Dizziness',
-    btnRun: 'Run prediction →',
-    btnReset: 'Reset all fields',
-    btnResetShort: 'Reset',
-    placeholder: 'Enter patient data and tap<br><strong>Run prediction</strong> to see model comparison.',
+    fHeadache: 'Acute Headache',
+    fOtherNeuro: 'Visual Disturbance / Ataxia / Vertigo',
+    btnRun: 'Execute Risk Assessment →',
+    btnReset: 'Clear Clinical Data',
+    btnResetShort: 'Clear',
+    placeholder: 'Input clinical parameters and select<br><strong>Execute Risk Assessment</strong> to generate the ensemble model comparison.',
     guideTitle: 'ℹ Guide & Interpretation',
     guideHowTitle: 'How to Use',
     guideResultTitle: 'Result Interpretation',
     guideInfoTitle: 'Important Information',
     // results (dynamic)
     riskHigh: 'High Risk', riskMod: 'Moderate Risk', riskLow: 'Low Risk',
-    verdictHigh: 'High hemorrhage risk',
-    verdictMod: 'Moderate hemorrhage risk',
-    verdictLow: 'Low hemorrhage risk',
-    descHigh: 'Two or more models predict probability above their clinical thresholds. Findings are consistent with elevated hemorrhagic risk. Immediate CT imaging and specialist review are strongly indicated.',
-    descMod: 'Model predictions are mixed or borderline. At least one model exceeds its decision threshold. Clinical judgment, patient history, and further imaging should guide next steps.',
-    descLow: 'All three models predict probability below their respective clinical thresholds. Hemorrhage is less likely based on current inputs. Standard stroke workup and monitoring apply.',
+    verdictHigh: 'High Probability of Hemorrhagic Stroke',
+    verdictMod: 'Moderate Probability of Hemorrhagic Stroke',
+    verdictLow: 'Low Probability of Hemorrhagic Stroke',
+    descHigh: 'Multiple models indicate a probability exceeding their safety thresholds. Findings are highly consistent with an acute hemorrhagic event. Urgent non-contrast CT imaging and neurological consultation are strongly indicated.',
+    descMod: 'Model predictions are discordant or borderline, with at least one model exceeding its safety threshold. Clinical correlation with patient history and expedited neuroimaging are required to definitively rule out hemorrhage.',
+    descLow: 'All models estimate the probability well below their respective safety thresholds. While hemorrhage is statistically less likely, standard acute stroke protocols and neuroimaging must still be followed.',
     clinicalConsensus: 'Clinical consensus',
     avgProb: 'Average probability',
     modelsAboveThresh: 'Models above threshold',
-    modelPredTitle: 'Model predictions vs threshold',
+    modelPredTitle: 'Model predictions vs clinical threshold',
     thresh: 'thresh',
-    riskFactorSummary: 'Risk factor summary',
+    riskFactorSummary: 'Active Clinical Factors',
     active: 'active',
-    noFactors: 'No risk factors selected.',
+    noFactors: 'No risk factors or clinical signs selected.',
     modelDetailTitle: 'Model detail comparison',
-    modelsRun: '✓ 3 models run',
-    predictedRisk: 'Predicted risk',
+    modelsRun: '✓ 3 models evaluated',
+    predictedRisk: 'Predicted probability',
     topFeatures: 'Top feature importances',
     researchDisclaimer: '<strong>Disclaimer:</strong> This ML model was developed exclusively for statistical demonstration and research purposes. Output must not substitute professional medical evaluation or clinical judgment by a qualified healthcare provider.',
     // factor labels
     factorLabels: {
-      bleeding_risk: 'Bleeding risk', aoc: 'Altered consciousness', athero_risk: 'Atherosclerosis',
-      headache: 'Headache present', other_neuro: 'Blur / Ataxia / Dizzy', sensory: 'Sensory deficit',
-      alcohol: 'Alcohol use', aphasia: 'Aphasia', cva: 'Prior stroke', ht: 'Hypertension',
-      dm: 'Diabetes', smoking: 'Smoking', weakness: 'Limb weakness',
+      bleeding_risk: 'Bleeding diathesis', aoc: 'Altered consciousness', athero_risk: 'Atherosclerosis risk',
+      headache: 'Acute headache', other_neuro: 'Visual/Ataxia/Vertigo', sensory: 'Sensory deficit',
+      alcohol: 'Alcohol use', aphasia: 'Aphasia', cva: 'Prior Stroke/TIA', ht: 'Hypertension',
+      dm: 'Diabetes', smoking: 'Active smoking', weakness: 'Focal limb weakness',
     },
     // model notes
     noteLabels: {
-      lr: 'High sensitivity · low threshold (2.9%)',
-      rf: 'Balanced specificity · threshold 22.9%',
-      xgb: 'Captures interactions · threshold 13.7%',
+      lr: 'High sensitivity · Safety threshold (2.9%)',
+      rf: 'Balanced specificity · Threshold 22.9%',
+      xgb: 'Captures interactions · Threshold 13.7%',
     },
     // metric labels
-    metricLabels: { Accuracy:'Accuracy', Precision:'Precision', Recall:'Recall', 'F1-score':'F1-score', AUPRC:'AUPRC', AUROC:'AUROC' },
+    metricLabels: { Accuracy:'Accuracy', Precision:'Precision (PPV)', Recall:'Recall (Sens.)', 'F1-score':'F1-score', AUPRC:'AUPRC', AUROC:'AUROC' },
     ciLabel: '95% CI',
-    resetPlaceholder: 'Enter patient data and tap<br><strong>Run prediction</strong> to see model comparison.',
+    resetPlaceholder: 'Input clinical parameters and select<br><strong>Execute Risk Assessment</strong> to generate the ensemble model comparison.',
   },
   th: {
-    pageTitle: 'ระบบประเมินความเสี่ยงโรคหลอดเลือดสมองชนิดเลือดออก',
-    pageSub: 'โรคหลอดเลือดสมองเฉียบพลัน · ระยะเวลาอาการ &lt;72 ชั่วโมง · เปรียบเทียบสามโมเดล (LR · RF · XGBoost)',
-    disclaimer: '⚠ <strong>ข้อจำกัดความรับผิดชอบ:</strong> สำหรับการวิจัยเท่านั้น ผลลัพธ์ไม่ถือเป็นคำแนะนำทางการแพทย์ การตัดสินใจทางคลินิกของแพทย์ผู้รักษาถือเป็นสิ่งสำคัญสูงสุด',
-    tabInput: 'ข้อมูลผู้ป่วย',
-    tabResults: 'ผลลัพธ์',
-    panelTitle: 'ข้อมูลผู้ป่วย',
-    secVitals: 'สัญญาณชีพและค่าทางคลินิก',
+    pageTitle: 'ระบบประเมินความเสี่ยงโรคหลอดเลือดสมองแตก (Hemorrhagic Stroke)',
+    pageSub: 'ผู้ป่วยโรคหลอดเลือดสมองเฉียบพลัน · ระยะเวลาเกิดอาการ &lt; 72 ชั่วโมง · ประมวลผลร่วม 3 โมเดล (LR · RF · XGBoost)',
+    disclaimer: '⚠ <strong>ข้อจำกัดความรับผิดชอบทางคลินิก:</strong> สำหรับใช้ในงานวิจัยและสาธิตเท่านั้น ผลการประเมินไม่สามารถทดแทนการวินิจฉัยทางการแพทย์ได้ การตัดสินใจของแพทย์ผู้รักษาย่อมเป็นที่สิ้นสุดเสมอ',
+    tabInput: 'ข้อมูลทางคลินิก',
+    tabResults: 'ผลการประเมิน',
+    panelTitle: 'พารามิเตอร์ทางคลินิกของผู้ป่วย',
+    secVitals: 'สัญญาณชีพแรกรับและข้อมูลทั่วไป',
     labelAge: 'อายุ (ปี)',
-    labelSBP: 'ความดันโลหิตซิสโตลิก (mmHg)',
-    labelGCS: 'คะแนน GCS รวม (3–15)',
-    labelMotor: 'ระดับกำลังกล้ามเนื้อต่ำสุด (0–5)',
-    labelOnset: 'ช่วงเวลาที่เริ่มมีอาการ',
+    labelSBP: 'ความดันโลหิตซิสโตลิกแรกรับ (mmHg)',
+    labelGCS: 'ระดับความรู้สึกตัวแรกรับ (GCS score, 3–15)',
+    labelMotor: 'ระดับกำลังกล้ามเนื้อส่วนที่อ่อนแรงที่สุด (Motor grade, 0–5)',
+    labelOnset: 'ระยะเวลาตั้งแต่เริ่มมีอาการ (Onset window)',
     onset0: '< 4.5 ชั่วโมง',
     onset1: '4.5 – 24 ชั่วโมง',
     onset2: '24 – 48 ชั่วโมง',
     onset3: '48 – 72 ชั่วโมง',
-    secRisk: 'ประวัติปัจจัยเสี่ยง',
-    fBleedingRisk: 'ความเสี่ยงเลือดออก',
-    fAthero: 'ความเสี่ยงหลอดเลือดแข็ง',
-    fAlcohol: 'ดื่มแอลกอฮอล์',
-    fHT: 'ความดันโลหิตสูง',
-    fDM: 'เบาหวาน',
-    fDLP: 'ไขมันในเลือดสูง',
-    fCVA: 'ประวัติโรคหลอดเลือดสมอง',
-    fCVD: 'โรคหัวใจ',
-    fSmoking: 'สูบบุหรี่',
-    secNeuro: 'อาการทางระบบประสาท',
-    fWeakness: 'แขนขาอ่อนแรง',
+    secRisk: 'ประวัติโรคประจำตัวและปัจจัยเสี่ยง',
+    fBleedingRisk: 'ภาวะเสี่ยงต่อการมีเลือดออก (Bleeding diathesis)',
+    fAthero: 'ภาวะเสี่ยงต่อโรคหลอดเลือดแข็ง (Atherosclerosis)',
+    fAlcohol: 'ประวัติดื่มสุรา (Active alcohol use)',
+    fHT: 'โรคความดันโลหิตสูง (Hypertension)',
+    fDM: 'โรคเบาหวาน (Diabetes Mellitus)',
+    fDLP: 'ภาวะไขมันในเลือดสูง (Dyslipidemia)',
+    fCVA: 'ประวัติโรคหลอดเลือดสมอง / TIA เดิม',
+    fCVD: 'โรคหัวใจและหลอดเลือด (CVD)',
+    fSmoking: 'ประวัติสูบบุหรี่ (Active smoking)',
+    secNeuro: 'อาการแสดงทางระบบประสาท',
+    fWeakness: 'แขนหรือขาอ่อนแรงซีกใดซีกหนึ่ง (Focal weakness)',
     fDysarthria: 'พูดไม่ชัด (Dysarthria)',
-    fFacial: 'ใบหน้าเบี้ยว',
-    fAOC: 'ระดับความรู้สึกตัวลดลง',
-    fSensory: 'ความรู้สึกผิดปกติ',
-    fAphasia: 'พูดไม่ออก/เข้าใจคำพูดไม่ได้',
-    fHeadache: 'ปวดศีรษะ',
-    fOtherNeuro: 'ตามัว/เดินเซ/วิงเวียน',
-    btnRun: 'วิเคราะห์ความเสี่ยง →',
-    btnReset: 'รีเซ็ตข้อมูลทั้งหมด',
-    btnResetShort: 'รีเซ็ต',
-    placeholder: 'กรอกข้อมูลผู้ป่วยแล้วกด<br><strong>วิเคราะห์ความเสี่ยง</strong> เพื่อดูผลเปรียบเทียบโมเดล',
+    fFacial: 'มุมปากตก / หน้าเบี้ยว (Facial palsy)',
+    fAOC: 'ระดับความรู้สึกตัวเปลี่ยนแปลง (Altered consciousness)',
+    fSensory: 'ความผิดปกติของการรับความรู้สึก (Sensory deficit)',
+    fAphasia: 'สูญเสียการสื่อความ (Aphasia)',
+    fHeadache: 'ปวดศีรษะเฉียบพลัน',
+    fOtherNeuro: 'การมองเห็นผิดปกติ / เดินเซ / เวียนศีรษะ',
+    btnRun: 'ประมวลผลความเสี่ยง →',
+    btnReset: 'ล้างข้อมูลทางคลินิก',
+    btnResetShort: 'ล้างข้อมูล',
+    placeholder: 'บันทึกข้อมูลพารามิเตอร์ทางคลินิกและกด<br><strong>ประมวลผลความเสี่ยง</strong> เพื่อดูการวิเคราะห์เปรียบเทียบจากตัวแบบ',
     guideTitle: 'ℹ คู่มือการใช้งานและการแปลผล',
     guideHowTitle: 'วิธีการใช้งาน',
     guideResultTitle: 'การแปลผลลัพธ์',
     guideInfoTitle: 'ข้อมูลสำคัญ',
     riskHigh: 'ความเสี่ยงสูง', riskMod: 'ความเสี่ยงปานกลาง', riskLow: 'ความเสี่ยงต่ำ',
-    verdictHigh: 'ความเสี่ยงเลือดออกในสมองสูง',
-    verdictMod: 'ความเสี่ยงเลือดออกในสมองปานกลาง',
-    verdictLow: 'ความเสี่ยงเลือดออกในสมองต่ำ',
-    descHigh: 'โมเดลตั้งแต่สองตัวขึ้นไปทำนายความน่าจะเป็นสูงกว่าเกณฑ์ทางคลินิก ผลสอดคล้องกับความเสี่ยงเลือดออกในสมองสูง ควรทำ CT สมองและปรึกษาผู้เชี่ยวชาญโดยเร่งด่วน',
-    descMod: 'ผลการทำนายของโมเดลไม่สอดคล้องกันหรืออยู่ในเกณฑ์กำกวม มีอย่างน้อยหนึ่งโมเดลที่เกินเกณฑ์การตัดสินใจ ควรใช้การตัดสินใจทางคลินิก ประวัติผู้ป่วย และการตรวจภาพวินิจฉัยเพิ่มเติม',
-    descLow: 'ทั้งสามโมเดลทำนายความน่าจะเป็นต่ำกว่าเกณฑ์ที่กำหนด โอกาสเกิดเลือดออกในสมองต่ำจากข้อมูลปัจจุบัน ควรดำเนินการตรวจและติดตามตามมาตรฐานโรคหลอดเลือดสมอง',
-    clinicalConsensus: 'ผลสรุปทางคลินิก',
-    avgProb: 'ความน่าจะเป็นเฉลี่ย',
-    modelsAboveThresh: 'โมเดลที่เกินเกณฑ์',
-    modelPredTitle: 'การทำนายของโมเดลเทียบกับเกณฑ์',
+    verdictHigh: 'มีความเป็นไปได้สูงที่จะเป็นภาวะเลือดออกในสมอง',
+    verdictMod: 'มีความเป็นไปได้ก้ำกึ่งต่อภาวะเลือดออกในสมอง',
+    verdictLow: 'มีความเป็นไปได้ต่ำที่จะเป็นภาวะเลือดออกในสมอง',
+    descHigh: 'ผลลัพธ์จากหลายโมเดลบ่งชี้ค่าความน่าจะเป็นที่สูงกว่าเกณฑ์ตัดสินใจทางคลินิก สอดคล้องกับภาวะเลือดออกในสมองเฉียบพลัน ข้อแนะนำ: ควรพิจารณาส่งตรวจ Non-contrast CT brain ทันทีและปรึกษาแพทย์เฉพาะทาง',
+    descMod: 'ผลการทำนายค่อนข้างขัดแย้งหรืออยู่ในระดับก้ำกึ่ง โดยมีอย่างน้อย 1 โมเดลที่ค่าความน่าจะเป็นเกินเกณฑ์ตัดสินใจ ข้อแนะนำ: ต้องอาศัยประวัติทางคลินิกอย่างละเอียดร่วมกับการพิจารณาส่งภาพถ่ายรังสีเพื่อแยกแยะโรค',
+    descLow: 'ทั้งสามโมเดลประเมินค่าความน่าจะเป็นต่ำกว่าเกณฑ์ความปลอดภัยอย่างชัดเจน ในทางสถิติมีความเป็นไปได้ต่ำ ข้อแนะนำ: ดำเนินการประเมินและดูแลรักษาตามมาตรฐานผู้ป่วยโรคหลอดเลือดสมองเฉียบพลัน และส่งภาพถ่ายรังสีตามปกติ',
+    clinicalConsensus: 'ผลสรุปทางคลินิก (Ensemble Consensus)',
+    avgProb: 'ความน่าจะเป็นเฉลี่ย (Average probability)',
+    modelsAboveThresh: 'จำนวนโมเดลที่เกินเกณฑ์วินิจฉัย',
+    modelPredTitle: 'การประเมินความน่าจะเป็นเทียบกับเกณฑ์ตัดสินใจ',
     thresh: 'เกณฑ์',
-    riskFactorSummary: 'สรุปปัจจัยเสี่ยง',
+    riskFactorSummary: 'พารามิเตอร์ที่นำมาใช้ประมวลผล',
     active: 'รายการ',
-    noFactors: 'ไม่มีปัจจัยเสี่ยงที่เลือก',
-    modelDetailTitle: 'เปรียบเทียบรายละเอียดโมเดล',
-    modelsRun: '✓ รัน 3 โมเดลแล้ว',
-    predictedRisk: 'ความเสี่ยงที่ทำนาย',
-    topFeatures: 'ตัวแปรสำคัญสูงสุด',
-    researchDisclaimer: '<strong>ข้อจำกัดความรับผิดชอบ:</strong> โมเดล ML นี้พัฒนาขึ้นเพื่อการสาธิตทางสถิติและการวิจัยเท่านั้น ผลลัพธ์ไม่สามารถใช้แทนการประเมินทางการแพทย์หรือการตัดสินใจทางคลินิกโดยบุคลากรทางการแพทย์ที่มีคุณสมบัติ',
+    noFactors: 'ไม่มีประวัติปัจจัยเสี่ยงหรืออาการทางระบบประสาทที่ถูกเลือก',
+    modelDetailTitle: 'รายละเอียดและตัวชี้วัดประสิทธิภาพของโมเดล',
+    modelsRun: '✓ ประมวลผลสำเร็จ 3 โมเดล',
+    predictedRisk: 'ความน่าจะเป็น (Predicted probability)',
+    topFeatures: 'ตัวแปรที่มีอิทธิพลสูงสุดต่อผลลัพธ์',
+    researchDisclaimer: '<strong>ข้อจำกัดความรับผิดชอบ:</strong> ตัวแบบการเรียนรู้ของเครื่อง (ML model) นี้พัฒนาขึ้นเพื่อการสาธิตทางสถิติและการวิจัยเท่านั้น ผลลัพธ์ไม่สามารถใช้แทนการประเมินทางการแพทย์หรือการตัดสินใจทางคลินิกโดยบุคลากรทางการแพทย์ที่มีคุณสมบัติ',
     factorLabels: {
-      bleeding_risk: 'ความเสี่ยงเลือดออก', aoc: 'ระดับความรู้สึกตัวลดลง', athero_risk: 'หลอดเลือดแข็ง',
-      headache: 'ปวดศีรษะ', other_neuro: 'ตามัว/เดินเซ/วิงเวียน', sensory: 'ความรู้สึกผิดปกติ',
-      alcohol: 'ดื่มแอลกอฮอล์', aphasia: 'พูดไม่ออก/เข้าใจไม่ได้', cva: 'ประวัติโรคหลอดเลือดสมอง',
+      bleeding_risk: 'ความเสี่ยงเลือดออก', aoc: 'ความรู้สึกตัวเปลี่ยนแปลง', athero_risk: 'หลอดเลือดแข็ง',
+      headache: 'ปวดศีรษะเฉียบพลัน', other_neuro: 'ตามัว/เดินเซ/เวียนศีรษะ', sensory: 'การรับความรู้สึกผิดปกติ',
+      alcohol: 'ดื่มสุรา', aphasia: 'สูญเสียการสื่อความ', cva: 'ประวัติ CVA/TIA',
       ht: 'ความดันโลหิตสูง', dm: 'เบาหวาน', smoking: 'สูบบุหรี่', weakness: 'แขนขาอ่อนแรง',
     },
     noteLabels: {
-      lr: 'ความไวสูง · เกณฑ์ต่ำ (2.9%)',
-      rf: 'ความจำเพาะสมดุล · เกณฑ์ 22.9%',
-      xgb: 'จับปฏิสัมพันธ์ · เกณฑ์ 13.7%',
+      lr: 'ความไวสูง · เกณฑ์คัดกรองเบื้องต้น (2.9%)',
+      rf: 'ความจำเพาะสมดุล · เกณฑ์วินิจฉัย (22.9%)',
+      xgb: 'จับปฏิสัมพันธ์ตัวแปร · เกณฑ์วินิจฉัย (13.7%)',
     },
-    metricLabels: { Accuracy:'ความแม่นยำ', Precision:'ความแม่นตรง', Recall:'ความไว', 'F1-score':'F1-score', AUPRC:'AUPRC', AUROC:'AUROC' },
+    metricLabels: { Accuracy:'Accuracy', Precision:'Precision (PPV)', Recall:'Recall (Sens.)', 'F1-score':'F1-score', AUPRC:'AUPRC', AUROC:'AUROC' },
     ciLabel: '95% CI',
-    resetPlaceholder: 'กรอกข้อมูลผู้ป่วยแล้วกด<br><strong>วิเคราะห์ความเสี่ยง</strong> เพื่อดูผลเปรียบเทียบโมเดล',
+    resetPlaceholder: 'บันทึกข้อมูลพารามิเตอร์ทางคลินิกและกด<br><strong>ประมวลผลความเสี่ยง</strong> เพื่อดูการวิเคราะห์เปรียบเทียบจากตัวแบบ',
   }
 };
 
@@ -1498,9 +1477,9 @@ const GUIDE_CONTENT = {
       <div class="info-step"><span class="info-step-num">1</span><span class="info-step-text"><strong>Input Clinical Parameters:</strong> Enter the patient's age, Systolic Blood Pressure (SBP), Glasgow Coma Scale (GCS) score, lowest motor power grade (0–5), and time since symptom onset.</span></div>
       <div class="info-step"><span class="info-step-num">2</span><span class="info-step-text"><strong>Select Medical History:</strong> Indicate known comorbidities and risk factors, including hypertension, diabetes mellitus, prior stroke, atherosclerosis risk, bleeding diathesis, dyslipidemia, smoking, and alcohol consumption.</span></div>
       <div class="info-step"><span class="info-step-num">3</span><span class="info-step-text"><strong>Record Neurological Deficits:</strong> Select presenting clinical signs from the physical examination, such as altered level of consciousness, limb weakness, aphasia, sensory deficits, facial palsy, headache, or visual/vestibular disturbances.</span></div>
-      <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>Execute Risk Assessment:</strong> Click <strong>"Run prediction →"</strong> to process the data simultaneously through all three machine learning models (Logistic Regression, Random Forest, XGBoost).</span></div>
-      <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>Interpret Findings:</strong> Review the "Results" tab for the ensemble clinical consensus, individual model probabilities, active risk factor summary, and detailed performance metrics.</span></div>
-      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>Clear Data:</strong> Use <strong>"Reset all fields"</strong> to clear the current patient's data and begin a new assessment.</span></div>`,
+      <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>Execute Risk Assessment:</strong> Click <strong>"Execute Risk Assessment →"</strong> to process the data simultaneously through all three machine learning models (Logistic Regression, Random Forest, XGBoost).</span></div>
+      <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>Interpret Findings:</strong> Review the "Risk Assessment" tab for the ensemble clinical consensus, individual model probabilities, active risk factor summary, and detailed performance metrics.</span></div>
+      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>Clear Data:</strong> Use <strong>"Clear Clinical Data"</strong> to clear the current patient's data and begin a new assessment.</span></div>`,
     result: `
       <h4>Ensemble Clinical Consensus</h4>
       <p>The overall risk stratification is determined by the concordance of the three models:</p>
@@ -1555,9 +1534,9 @@ const GUIDE_CONTENT = {
       <div class="info-step"><span class="info-step-num">1</span><span class="info-step-text"><strong>กรอกข้อมูลสัญญาณชีพและข้อมูลทางคลินิก:</strong> ระบุอายุ, ความดันโลหิตซิสโตลิก (SBP), คะแนน Glasgow Coma Scale (GCS), ระดับกำลังกล้ามเนื้อที่อ่อนแรงที่สุด (Motor grade 0–5) และระยะเวลาตั้งแต่เริ่มมีอาการ (Onset window)</span></div>
       <div class="info-step"><span class="info-step-num">2</span><span class="info-step-text"><strong>ระบุประวัติโรคประจำตัวและปัจจัยเสี่ยง:</strong> เลือกข้อมูลที่ตรงกับประวัติผู้ป่วย เช่น โรคความดันโลหิตสูง, โรคเบาหวาน, ประวัติโรคหลอดเลือดสมองเดิม, ความเสี่ยงต่อภาวะหลอดเลือดแข็งตัว, ความเสี่ยงต่อภาวะเลือดออก, ภาวะไขมันในเลือดสูง, ประวัติการสูบบุหรี่ และการดื่มสุรา</span></div>
       <div class="info-step"><span class="info-step-num">3</span><span class="info-step-text"><strong>ระบุอาการแสดงทางระบบประสาท:</strong> เลือกอาการทางคลินิกที่ตรวจพบ ได้แก่ ระดับความรู้สึกตัวที่ลดลง, แขนขาอ่อนแรง, ภาวะสูญเสียการสื่อความ (Aphasia), ความผิดปกติของการรับความรู้สึก, ภาวะอัมพาตใบหน้า, อาการปวดศีรษะ และอาการตามัว/เดินเซ/วิงเวียน</span></div>
-      <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>ประมวลผลความเสี่ยง:</strong> กดปุ่ม <strong>"วิเคราะห์ความเสี่ยง →"</strong> เพื่อให้ระบบประมวลผลจากทั้ง 3 โมเดล (Logistic Regression, Random Forest และ XGBoost) ไปพร้อมกัน</span></div>
-      <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>ตรวจสอบผลการประเมิน:</strong> ดูที่แท็บ "ผลลัพธ์" เพื่อตรวจสอบข้อสรุปความเสี่ยงภาพรวม (Ensemble Verdict), ค่าความน่าจะเป็นจากแต่ละโมเดล, สรุปปัจจัยเสี่ยงที่นำมาใช้คำนวณ และรายละเอียดเปรียบเทียบประสิทธิภาพของตัวแบบ</span></div>
-      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>การล้างข้อมูล:</strong> กดปุ่ม <strong>"รีเซ็ตข้อมูลทั้งหมด"</strong> เพื่อลบค่าที่กรอกไว้ และเริ่มต้นการประเมินผู้ป่วยรายใหม่</span></div>`,
+      <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>ประมวลผลความเสี่ยง:</strong> กดปุ่ม <strong>"ประมวลผลความเสี่ยง →"</strong> เพื่อให้ระบบประมวลผลจากทั้ง 3 โมเดล (Logistic Regression, Random Forest และ XGBoost) ไปพร้อมกัน</span></div>
+      <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>ตรวจสอบผลการประเมิน:</strong> ดูที่แท็บ "ผลการประเมิน" เพื่อตรวจสอบข้อสรุปความเสี่ยงภาพรวม (Ensemble Verdict), ค่าความน่าจะเป็นจากแต่ละโมเดล, สรุปปัจจัยเสี่ยงที่นำมาใช้คำนวณ และรายละเอียดเปรียบเทียบประสิทธิภาพของตัวแบบ</span></div>
+      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>การล้างข้อมูล:</strong> กดปุ่ม <strong>"ล้างข้อมูลทางคลินิก"</strong> เพื่อลบค่าที่กรอกไว้ และเริ่มต้นการประเมินผู้ป่วยรายใหม่</span></div>`,
     result: `
       <h4>การประเมินความเสี่ยงภาพรวม (Ensemble Verdict)</h4>
       <p>ภาพรวมพิจารณาจากจำนวนโมเดลที่ทำนายว่ามีความเสี่ยงสูง: หากมี ≥ 2 โมเดลประเมินว่ามีความเสี่ยงสูง → <span class="ibadge ibadge-high">ความเสี่ยงสูง</span> หากมี 1 โมเดลประเมินว่ามีความเสี่ยงสูง หรือ ≥ 2 โมเดลประเมินว่ามีความเสี่ยงปานกลาง → <span class="ibadge ibadge-mod">ความเสี่ยงปานกลาง</span> กรณีอื่นๆ → <span class="ibadge ibadge-low">ความเสี่ยงต่ำ</span></p>
@@ -1576,7 +1555,7 @@ const GUIDE_CONTENT = {
       <h4>ตัวชี้วัดประสิทธิภาพ (พร้อมช่วงความเชื่อมั่น 95% CI)</h4>
       <ul>
         <li><strong>ความแม่นยำ (Accuracy)</strong> — สัดส่วนของการทำนายภาพรวมที่ถูกต้องทั้งหมด</li>
-        <li><strong>ความแม่นตรง (Precision)</strong> — สัดส่วนของผลบวกจริง จากจำนวนที่โมเดลทำนายว่าเป็นผลบวกทั้งหมด</li>
+        <li><strong>ความแม่นตรง (Precision / PPV)</strong> — สัดส่วนของผลบวกจริง จากจำนวนที่โมเดลทำนายว่าเป็นผลบวกทั้งหมด</li>
         <li><strong>ความไว (Recall / Sensitivity)</strong> — สัดส่วนของผู้ป่วยที่มีภาวะเลือดออกในสมองจริง ที่โมเดลสามารถตรวจจับได้</li>
         <li><strong>F1-score</strong> — ค่าเฉลี่ยฮาร์โมนิกระหว่าง Precision และ Recall</li>
         <li><strong>AUPRC</strong> — พื้นที่ใต้กราฟ Precision-Recall ซึ่งสะท้อนประสิทธิภาพได้ดีในชุดข้อมูลที่ไม่สมดุล (Imbalanced data)</li>
@@ -1645,9 +1624,9 @@ function applyLang() {
   }
   // Guide content
   renderGuide();
-  // Lang button label
+  // Lang button label - UPDATED to just TH / EN
   const btn = document.getElementById('lang-btn');
-  if (btn) btn.textContent = lang === 'en' ? '🇹🇭 TH' : '🇬🇧 EN';
+  if (btn) btn.textContent = lang === 'en' ? 'TH' : 'EN';
   // html lang attribute
   document.documentElement.lang = lang === 'th' ? 'th' : 'en';
 }
@@ -1920,7 +1899,6 @@ function runPrediction() {
   const panel = document.getElementById('results-panel');
   panel.innerHTML = `
 
-    <!-- ① Consensus — top -->
     <div class="consensus-card">
       <div class="consensus-label">${t('clinicalConsensus')}</div>
       <div class="consensus-verdict" style="color:${verdictColor}">${verdict}</div>
@@ -1931,7 +1909,6 @@ function runPrediction() {
       </div>
     </div>
 
-    <!-- ② Merged model cards + gauge -->
     <div class="models-card">
       <div class="models-card-title">${t('modelPredTitle')}</div>
       ${MODELS.map((m, i) => {
@@ -1958,7 +1935,6 @@ function runPrediction() {
       }).join('')}
     </div>
 
-    <!-- ④ Active factors -->
     <div class="factors-card">
       <div class="factors-label">${t('riskFactorSummary')} (${activeFactors.length} ${t('active')})</div>
       ${activeFactors.length === 0
@@ -1969,7 +1945,6 @@ function runPrediction() {
       }
     </div>
 
-    <!-- ⑤ Model detail comparison — COLLAPSIBLE (default: collapsed) -->
     <div class="metrics-card" id="metrics-card">
       <div class="mdt-toggle-header" onclick="toggleModelDetail()" role="button" aria-expanded="false" aria-controls="mdt-body">
         <div class="mdt-header-left">
@@ -1982,7 +1957,6 @@ function runPrediction() {
       <div class="mdt-body" id="mdt-body" role="region">
         <div class="mdt-body-inner">
 
-          <!-- Model detail cards -->
           <div class="mdc-grid">
             ${MODELS.map(m => {
               const feats = seededFeatures(m.featSeed, 3);
@@ -2036,17 +2010,12 @@ function runPrediction() {
             }).join('')}
           </div>
 
-          <!-- Research disclaimer -->
           <div class="mdt-disclaimer">
             <span class="mdt-disclaimer-icon">⚠</span>
             <div class="mdt-disclaimer-body">${t('researchDisclaimer')}</div>
           </div>
 
-        </div><!-- /mdt-body-inner -->
-      </div><!-- /mdt-body -->
-    </div><!-- /metrics-card -->
-
-  `;
+        </div></div></div>`;
 
   // Switch to results tab on mobile after running
   if (window.innerWidth < 780) {
