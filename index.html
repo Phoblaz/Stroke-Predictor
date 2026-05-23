@@ -50,6 +50,152 @@
     --red-bg:    #2c0e0e;
   }
 
+  /* ── Info panel accordion ─────────────────────────────────────── */
+  .info-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin: .75rem 1rem;
+    overflow: hidden;
+  }
+  .info-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    gap: .75rem;
+  }
+  .info-panel-header:hover { background: var(--surface2); }
+  .info-panel-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .info-panel-toggle {
+    font-size: 11px;
+    color: var(--hint);
+    transition: transform .25s;
+    flex-shrink: 0;
+  }
+  .info-panel.open .info-panel-toggle { transform: rotate(180deg); }
+  .info-panel-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease;
+  }
+  .info-panel.open .info-panel-body { max-height: 2000px; }
+  .info-panel-inner {
+    padding: 0 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  /* accordion item */
+  .info-acc {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .info-acc-hd {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem .85rem;
+    cursor: pointer;
+    background: var(--surface2);
+    user-select: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .info-acc-hd:hover { filter: brightness(.97); }
+  .info-acc-hd .acc-icon { font-size: 15px; flex-shrink: 0; }
+  .info-acc-hd .acc-chev { margin-left: auto; font-size: 11px; color: var(--hint); transition: transform .2s; }
+  .info-acc.open .acc-chev { transform: rotate(180deg); }
+  .info-acc-bd {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .28s ease;
+  }
+  .info-acc.open .info-acc-bd { max-height: 1000px; }
+  .info-acc-inner {
+    padding: .75rem .85rem;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  /* info typography */
+  .info-acc-inner h4 {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin: .65rem 0 .2rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .info-acc-inner h4:first-child { margin-top: 0; }
+  .info-acc-inner p { margin-bottom: .4rem; }
+  .info-acc-inner ul {
+    margin: .2rem 0 .4rem 1rem;
+    list-style: disc;
+  }
+  .info-acc-inner ul li { margin-bottom: .2rem; }
+  .info-step {
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    margin-bottom: .5rem;
+  }
+  .info-step-num {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--blue-bg);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .info-step-text { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .info-step-text strong { color: var(--text); }
+
+  /* risk badge inline */
+  .ibadge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 2px;
+    vertical-align: middle;
+  }
+  .ibadge-high { background: var(--red-bg);   color: var(--red);   }
+  .ibadge-mod  { background: var(--amber-bg); color: var(--amber); }
+  .ibadge-low  { background: var(--green-bg); color: var(--green); }
+
+  .info-note-box {
+    background: var(--amber-bg);
+    border: 1px solid rgba(133,79,11,.2);
+    border-radius: var(--radius);
+    padding: .55rem .75rem;
+    font-size: 12px;
+    color: var(--amber);
+    margin-top: .3rem;
+    line-height: 1.55;
+  }
+
+  @media (min-width: 900px) {
+    .info-panel { margin: .75rem 0; }
+    .info-panel-inner { flex-direction: row; align-items: flex-start; }
+    .info-acc { flex: 1; }
+  }
+
   /* ── Dark theme overrides ─────────────────────────────────────── */
   [data-theme="dark"] .model-card.risk-high { border-color: #F09595; background: #2c0e0e; }
   [data-theme="dark"] .model-card.risk-mod  { border-color: #FAC775; background: #2a1c06; }
@@ -993,6 +1139,130 @@
     ⚠ <strong>Usage Disclaimer:</strong> Research use only. Results do not constitute medical advice. Clinical judgment of the attending physician takes precedence.
   </div>
 
+  <!-- ── Info panel ── -->
+  <div class="info-panel" id="info-panel">
+    <div class="info-panel-header" onclick="toggleInfo()">
+      <span class="info-panel-title">ℹ Guide &amp; Interpretation</span>
+      <span class="info-panel-toggle">▾</span>
+    </div>
+    <div class="info-panel-body">
+      <div class="info-panel-inner">
+
+        <!-- 1. How to Use -->
+        <div class="info-acc" id="acc-how">
+          <div class="info-acc-hd" onclick="toggleAcc('acc-how')">
+            <span class="acc-icon">📋</span> How to Use
+            <span class="acc-chev">▾</span>
+          </div>
+          <div class="info-acc-bd">
+            <div class="info-acc-inner">
+              <div class="info-step">
+                <span class="info-step-num">1</span>
+                <span class="info-step-text"><strong>Enter clinical vitals.</strong> Input the patient's Age, Systolic Blood Pressure (SBP), Glasgow Coma Scale (GCS), Motor grade (0–5), and Symptom onset window (hours).</span>
+              </div>
+              <div class="info-step">
+                <span class="info-step-num">2</span>
+                <span class="info-step-text"><strong>Select comorbidities.</strong> Toggle on any known conditions — Hypertension, Diabetes, Prior stroke, Atherosclerosis risk, Bleeding risk, Dyslipidemia, Smoking, Alcohol use.</span>
+              </div>
+              <div class="info-step">
+                <span class="info-step-num">3</span>
+                <span class="info-step-text"><strong>Select neurological signs.</strong> Toggle any presenting signs — Altered consciousness, Limb weakness, Aphasia, Sensory deficit, Facial palsy, Headache, Blur/Ataxia/Dizzy.</span>
+              </div>
+              <div class="info-step">
+                <span class="info-step-num">4</span>
+                <span class="info-step-text"><strong>Run prediction.</strong> Press <strong>Run prediction →</strong>. All three models (Logistic Regression, Random Forest, XGBoost) calculate simultaneously.</span>
+              </div>
+              <div class="info-step">
+                <span class="info-step-num">5</span>
+                <span class="info-step-text"><strong>Review results.</strong> Check the Results tab. Review the ensemble verdict, individual model probabilities, active risk factor summary, and the detailed model comparison panel.</span>
+              </div>
+              <div class="info-step">
+                <span class="info-step-num">6</span>
+                <span class="info-step-text"><strong>Reset.</strong> Use <strong>Reset all fields</strong> to clear all inputs and start a new assessment.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Result Interpretation -->
+        <div class="info-acc" id="acc-result">
+          <div class="info-acc-hd" onclick="toggleAcc('acc-result')">
+            <span class="acc-icon">📊</span> Result Interpretation
+            <span class="acc-chev">▾</span>
+          </div>
+          <div class="info-acc-bd">
+            <div class="info-acc-inner">
+              <h4>Ensemble Verdict</h4>
+              <p>The overall verdict is driven by how many models flag high risk. If ≥ 2 models classify the patient as High Risk, the verdict is <span class="ibadge ibadge-high">High Risk</span>. If only 1 model flags High or ≥ 2 flag Moderate, the verdict is <span class="ibadge ibadge-mod">Moderate Risk</span>. Otherwise it is <span class="ibadge ibadge-low">Low Risk</span>.</p>
+
+              <h4>Individual Model Probabilities</h4>
+              <p>Each model outputs a raw predicted probability (%) against its own clinical threshold:</p>
+              <ul>
+                <li><strong>Logistic Regression (LR)</strong> — threshold 2.9%. Highly sensitive; catches most positive cases but may flag false positives. Best for ruling out hemorrhage.</li>
+                <li><strong>Random Forest (RF)</strong> — threshold 22.9%. More conservative; better specificity. Good at ruling in hemorrhage when positive.</li>
+                <li><strong>XGBoost</strong> — threshold 13.7%. Captures non-linear interactions (e.g. very high SBP + bleeding risk together). Balances sensitivity and specificity.</li>
+              </ul>
+
+              <h4>Risk Classification per Model</h4>
+              <ul>
+                <li><span class="ibadge ibadge-high">High Risk</span> — probability ≥ 2× threshold</li>
+                <li><span class="ibadge ibadge-mod">Moderate Risk</span> — probability ≥ threshold but &lt; 2× threshold</li>
+                <li><span class="ibadge ibadge-low">Low Risk</span> — probability below threshold</li>
+              </ul>
+
+              <h4>Model Detail Comparison (expand)</h4>
+              <p>Expand the "Model Detail Comparison" section to see per-model performance metrics with 95% Confidence Intervals:</p>
+              <ul>
+                <li><strong>Accuracy</strong> — overall proportion correctly classified</li>
+                <li><strong>Precision</strong> — of those flagged positive, how many truly are</li>
+                <li><strong>Recall (Sensitivity)</strong> — proportion of true hemorrhage cases detected</li>
+                <li><strong>F1-score</strong> — harmonic mean of Precision and Recall</li>
+                <li><strong>AUPRC</strong> — area under precision-recall curve; useful for imbalanced data</li>
+                <li><strong>AUROC</strong> — overall discriminative ability (1.0 = perfect, 0.5 = random)</li>
+              </ul>
+              <p>The CI strip bar visualises the 95% confidence interval on a 0–1 scale. Wider bands mean more uncertainty.</p>
+
+              <h4>Risk Factor Summary</h4>
+              <p>Shows all currently toggled-on patient factors as pills — a quick checklist to confirm the inputs fed into the models before acting on results.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Important Information -->
+        <div class="info-acc" id="acc-info">
+          <div class="info-acc-hd" onclick="toggleAcc('acc-info')">
+            <span class="acc-icon">⚠️</span> Important Information
+            <span class="acc-chev">▾</span>
+          </div>
+          <div class="info-acc-bd">
+            <div class="info-acc-inner">
+              <h4>Dataset &amp; Validation</h4>
+              <p>Models were trained on <strong>stroke_data_v7</strong> (n = 406, hemorrhagic stroke prevalence 23%), following <strong>TRIPOD+AI (BMJ 2024)</strong> reporting standards. The wide 95% CIs reflect the limited sample size — interpret with caution in populations that differ from the training cohort.</p>
+
+              <h4>Limb Weakness &amp; Protective Effect</h4>
+              <p>Limb weakness carries a <em>negative</em> coefficient across all three models — it is more strongly associated with ischemic stroke than hemorrhage. Its presence marginally lowers the predicted hemorrhage probability but does not eliminate risk.</p>
+
+              <h4>Threshold Rationale</h4>
+              <p>Thresholds were selected to prioritise sensitivity (minimise missed hemorrhage cases). LR's very low threshold (2.9%) is intentional — it serves as a safety net, escalating borderline cases for imaging review.</p>
+
+              <h4>What This Tool Cannot Do</h4>
+              <ul>
+                <li>Cannot replace non-contrast CT, which remains the gold standard for diagnosing hemorrhagic stroke.</li>
+                <li>Does not account for anticoagulant dose, INR, platelet count, or imaging findings.</li>
+                <li>Has not been externally validated — prospective clinical trials are needed before any operational use.</li>
+              </ul>
+
+              <div class="info-note-box">
+                ⚠ <strong>Research use only.</strong> This tool is intended to support clinical reasoning, not replace it. The attending physician's clinical judgment, examination findings, and imaging results always take precedence.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /info-panel-inner -->
+    </div><!-- /info-panel-body -->
+  </div><!-- /info-panel -->
+
   <!-- Mobile tab nav -->
   <nav class="mobile-tabs" id="mobile-tabs">
     <button class="mobile-tab active" data-tab="input">Patient Data</button>
@@ -1107,6 +1377,14 @@
 </div><!-- /container -->
 
 <script>
+// ── Info panel ────────────────────────────────────────────────────
+function toggleInfo() {
+  document.getElementById('info-panel').classList.toggle('open');
+}
+function toggleAcc(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
 // ── Theme ─────────────────────────────────────────────────────────
 function toggleTheme() {
   const html = document.documentElement;
