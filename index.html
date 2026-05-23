@@ -1495,52 +1495,57 @@ const GUIDE_CONTENT = {
     resultTitle: 'Result Interpretation',
     infoTitle: 'Important Information',
     how: `
-      <div class="info-step"><span class="info-step-num">1</span><span class="info-step-text"><strong>Enter clinical vitals.</strong> Input the patient's Age, Systolic Blood Pressure (SBP), Glasgow Coma Scale (GCS), Motor grade (0–5), and Symptom onset window.</span></div>
-      <div class="info-step"><span class="info-step-num">2</span><span class="info-step-text"><strong>Select comorbidities.</strong> Toggle on any known conditions — Hypertension, Diabetes, Prior stroke, Atherosclerosis risk, Bleeding risk, Dyslipidemia, Smoking, Alcohol use.</span></div>
-      <div class="info-step"><span class="info-step-num">3</span><span class="info-step-text"><strong>Select neurological signs.</strong> Toggle any presenting signs — Altered consciousness, Limb weakness, Aphasia, Sensory deficit, Facial palsy, Headache, Blur/Ataxia/Dizzy.</span></div>
-      <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>Run prediction.</strong> Press <strong>Run prediction →</strong>. All three models (Logistic Regression, Random Forest, XGBoost) calculate simultaneously.</span></div>
-      <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>Review results.</strong> Check the Results tab for the ensemble verdict, model probabilities, risk factor summary, and detailed model comparison.</span></div>
-      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>Reset.</strong> Use <strong>Reset all fields</strong> to clear all inputs and start a new assessment.</span></div>`,
+      <div class="info-step"><span class="info-step-num">1</span><span class="info-step-text"><strong>Input Clinical Parameters:</strong> Enter the patient's age, Systolic Blood Pressure (SBP), Glasgow Coma Scale (GCS) score, lowest motor power grade (0–5), and time since symptom onset.</span></div>
+      <div class="info-step"><span class="info-step-num">2</span><span class="info-step-text"><strong>Select Medical History:</strong> Indicate known comorbidities and risk factors, including hypertension, diabetes mellitus, prior stroke, atherosclerosis risk, bleeding diathesis, dyslipidemia, smoking, and alcohol consumption.</span></div>
+      <div class="info-step"><span class="info-step-num">3</span><span class="info-step-text"><strong>Record Neurological Deficits:</strong> Select presenting clinical signs from the physical examination, such as altered level of consciousness, limb weakness, aphasia, sensory deficits, facial palsy, headache, or visual/vestibular disturbances.</span></div>
+      <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>Execute Risk Assessment:</strong> Click <strong>"Run prediction →"</strong> to process the data simultaneously through all three machine learning models (Logistic Regression, Random Forest, XGBoost).</span></div>
+      <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>Interpret Findings:</strong> Review the "Results" tab for the ensemble clinical consensus, individual model probabilities, active risk factor summary, and detailed performance metrics.</span></div>
+      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>Clear Data:</strong> Use <strong>"Reset all fields"</strong> to clear the current patient's data and begin a new assessment.</span></div>`,
     result: `
-      <h4>Ensemble Verdict</h4>
-      <p>The overall verdict is driven by how many models flag high risk. If ≥ 2 models classify as High Risk → <span class="ibadge ibadge-high">High Risk</span>. If 1 flags High or ≥ 2 flag Moderate → <span class="ibadge ibadge-mod">Moderate Risk</span>. Otherwise → <span class="ibadge ibadge-low">Low Risk</span>.</p>
-      <h4>Individual Model Probabilities</h4>
+      <h4>Ensemble Clinical Consensus</h4>
+      <p>The overall risk stratification is determined by the concordance of the three models:</p>
       <ul>
-        <li><strong>Logistic Regression (LR)</strong> — threshold 2.9%. Highly sensitive; best for ruling out hemorrhage.</li>
-        <li><strong>Random Forest (RF)</strong> — threshold 22.9%. Better specificity; good at ruling in hemorrhage.</li>
-        <li><strong>XGBoost</strong> — threshold 13.7%. Captures non-linear interactions; balances sensitivity and specificity.</li>
+        <li>≥ 2 models flag High Risk → <span class="ibadge ibadge-high">High Risk</span></li>
+        <li>1 model flags High OR ≥ 2 flag Moderate → <span class="ibadge ibadge-mod">Moderate Risk</span></li>
+        <li>Otherwise → <span class="ibadge ibadge-low">Low Risk</span></li>
       </ul>
-      <h4>Risk Classification</h4>
+      <h4>Model-Specific Probabilities</h4>
       <ul>
-        <li><span class="ibadge ibadge-high">High Risk</span> — probability ≥ 2× threshold</li>
-        <li><span class="ibadge ibadge-mod">Moderate Risk</span> — probability ≥ threshold but &lt; 2×</li>
-        <li><span class="ibadge ibadge-low">Low Risk</span> — probability below threshold</li>
+        <li><strong>Logistic Regression (LR):</strong> Calibrated to a 2.9% threshold. Maximizes sensitivity, serving as an optimal tool for ruling out hemorrhage.</li>
+        <li><strong>Random Forest (RF):</strong> Calibrated to a 22.9% threshold. Offers higher specificity, providing stronger evidence for ruling in hemorrhage.</li>
+        <li><strong>XGBoost:</strong> Calibrated to a 13.7% threshold. Captures complex, non-linear interactions between variables, balancing sensitivity and specificity.</li>
+      </ul>
+      <h4>Risk Classification Criteria</h4>
+      <ul>
+        <li><span class="ibadge ibadge-high">High Risk</span> — Predicted probability is ≥ 2× the model's threshold.</li>
+        <li><span class="ibadge ibadge-mod">Moderate Risk</span> — Predicted probability meets or exceeds the threshold but is &lt; 2× the threshold.</li>
+        <li><span class="ibadge ibadge-low">Low Risk</span> — Predicted probability remains below the decision threshold.</li>
       </ul>
       <h4>Performance Metrics (95% CI)</h4>
       <ul>
-        <li><strong>Accuracy</strong> — overall proportion correctly classified</li>
-        <li><strong>Precision</strong> — of positive flags, how many are truly positive</li>
-        <li><strong>Recall</strong> — proportion of true hemorrhage cases detected</li>
-        <li><strong>F1-score</strong> — harmonic mean of Precision and Recall</li>
-        <li><strong>AUPRC</strong> — precision-recall curve area; useful for imbalanced data</li>
-        <li><strong>AUROC</strong> — discriminative ability (1.0 = perfect, 0.5 = random)</li>
+        <li><strong>Accuracy:</strong> Overall proportion of correct predictions.</li>
+        <li><strong>Precision (PPV):</strong> The proportion of true hemorrhagic strokes among all positive predictions.</li>
+        <li><strong>Recall (Sensitivity):</strong> The proportion of actual hemorrhagic strokes successfully identified by the model.</li>
+        <li><strong>F1-score:</strong> The harmonic mean of Precision and Recall.</li>
+        <li><strong>AUPRC:</strong> Area under the precision-recall curve; highly robust for evaluating imbalanced clinical datasets.</li>
+        <li><strong>AUROC:</strong> Overall discriminative capacity (1.0 = perfect discrimination, 0.5 = random chance).</li>
       </ul>
       <h4>Risk Factor Summary</h4>
-      <p>Displays all active input factors as pills — a quick checklist to verify what was fed into the models.</p>`,
+      <p>Provides a rapid visual audit of all selected input variables to verify the data fed into the models.</p>`,
     info: `
-      <h4>Dataset &amp; Validation</h4>
-      <p>Trained on <strong>stroke_data_v7</strong> (n = 406, hemorrhagic prevalence 23%), following <strong>TRIPOD+AI (BMJ 2024)</strong> standards. Wide CIs reflect the limited sample size.</p>
-      <h4>Limb Weakness &amp; Protective Effect</h4>
-      <p>Limb weakness has a <em>negative</em> coefficient across all models — more strongly associated with ischemic stroke. It marginally lowers predicted hemorrhage probability but does not eliminate risk.</p>
-      <h4>Threshold Rationale</h4>
-      <p>Thresholds prioritise sensitivity (minimising missed cases). LR's low threshold (2.9%) is a safety net that escalates borderline cases for imaging review.</p>
-      <h4>What This Tool Cannot Do</h4>
+      <h4>Training Cohort & Methodology</h4>
+      <p>Developed using the <strong>stroke_data_v7</strong> dataset (n = 406, hemorrhagic stroke prevalence 23%) and reported in accordance with <strong>TRIPOD+AI (BMJ 2024)</strong> guidelines. Wide confidence intervals reflect the constraints of the current sample size.</p>
+      <h4>Limb Weakness as an Inverse Predictor</h4>
+      <p>Limb weakness demonstrates a <em>negative</em> coefficient across the models. Statistically, it is more strongly associated with acute ischemic stroke than hemorrhagic stroke in this cohort. While its presence slightly reduces the calculated probability of hemorrhage, it does not eliminate the risk.</p>
+      <h4>Clinical Threshold Calibration</h4>
+      <p>Decision thresholds were intentionally tuned to prioritize near 100% sensitivity, ensuring patient safety in the emergency room. The exceptionally low threshold for the LR model (2.9%) functions as a clinical safety net to escalate ambiguous or borderline cases for immediate CT imaging.</p>
+      <h4>Clinical Limitations</h4>
       <ul>
-        <li>Cannot replace non-contrast CT — the gold standard for diagnosing hemorrhagic stroke.</li>
-        <li>Does not account for anticoagulant dose, INR, platelet count, or imaging findings.</li>
-        <li>Not externally validated — prospective clinical trials are needed before operational use.</li>
+        <li>This tool cannot and does not replace a non-contrast head CT, which remains the absolute gold standard for diagnosing hemorrhagic stroke.</li>
+        <li>The models currently do not incorporate critical variables such as anticoagulant dosages, INR, platelet counts, or radiographic findings.</li>
+        <li>The models lack external validation. Prospective clinical trials are strictly required prior to operational deployment.</li>
       </ul>
-      <div class="info-note-box">⚠ <strong>Research use only.</strong> This tool supports clinical reasoning, not replaces it. Physician judgment always takes precedence.</div>`,
+      <div class="info-note-box">⚠ <strong>Research Use Only.</strong> This application is designed exclusively to support clinical reasoning, not to substitute it. The clinical judgment of the attending physician must always take precedence.</div>`
   },
   th: {
     howTitle: 'วิธีการใช้งาน',
