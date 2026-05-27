@@ -1560,9 +1560,9 @@ const GUIDE_CONTENT = {
       </ul>
       <h4>ค่าเกณฑ์ตัดสินใจของแต่ละโมเดล (Thresholds)</h4>
       <ul>
-        <li><strong>Logistic Regression (LR):</strong> เกณฑ์ 2.9% เน้นความไวสูงสุด (High Sensitivity) เพื่อความปลอดภัยในการ Rule-out</li>
-        <li><strong>Random Forest (RF):</strong> เกณฑ์ 22.9% มีความจำเพาะสูงขึ้น ช่วยในการ Rule-in</li>
-        <li><strong>XGBoost:</strong> เกณฑ์ 13.7% สามารถวิเคราะห์ความสัมพันธ์ของตัวแปรที่ซับซ้อนได้</li>
+        <li><strong>Logistic Regression (LR):</strong> เกณฑ์ 2.9% (Sensitivity 94.1%) เป็นด่านแรกที่มีความไวสูง ใช้สำหรับ "คัดผู้ป่วยออก (Rule-out)" ได้อย่างปลอดภัย</li>
+        <li><strong>Random Forest (RF):</strong> เกณฑ์ 22.9% (NPV 89.3%) มีความแม่นยำในการทำนายผลลบสูง ช่วย "ยืนยันว่าไม่ใช่ชนิดหลอดเลือดแตก (Non-Hemorrhagic Stroke)" เพื่อเพิ่มความมั่นใจในการวินิจฉัย</li>
+        <li><strong>XGBoost:</strong> เกณฑ์ 13.7% ใช้ประเมินร่วมเพื่อ "สนับสนุนการตัดสินใจ" อย่างไรก็ตาม ผู้ใช้ควรตระหนักถึงโอกาสเกิดการยึดติดข้อมูล (Overfitting) จากข้อจำกัดด้านขนาดข้อมูล</li>
       </ul>
       <h4>เกณฑ์การจัดสถานะ (Binary Logic)</h4>
       <ul>
