@@ -26,6 +26,8 @@
     --amber-bg:  #FAEEDA;
     --red:       #A32D2D;
     --red-bg:    #FCEBEB;
+    --orange:    #8B4513;
+    --orange-bg: #FDF0E6;
     --radius:    10px;
     --radius-lg: 14px;
     --bottom-bar: 64px;
@@ -48,6 +50,8 @@
     --amber-bg:  #2a1c06;
     --red:       #F09595;
     --red-bg:    #2c0e0e;
+    --orange:    #F0A070;
+    --orange-bg: #2c1a0e;
   }
 
   /* ── Info panel accordion ─────────────────────────────────────── */
@@ -198,16 +202,12 @@
 
   /* ── Dark theme overrides ─────────────────────────────────────── */
   [data-theme="dark"] .model-card.risk-high { border-color: #F09595; background: #2c0e0e; }
-  [data-theme="dark"] .model-card.risk-mod  { border-color: #FAC775; background: #2a1c06; }
   [data-theme="dark"] .model-card.risk-low  { border-color: #97C459; background: #182808; }
   [data-theme="dark"] .mc-prob.c-high { color: #F09595; }
-  [data-theme="dark"] .mc-prob.c-mod  { color: #FAC775; }
   [data-theme="dark"] .mc-prob.c-low  { color: #97C459; }
   [data-theme="dark"] .mc-badge.b-high { background: #3d1212; color: #F09595; }
-  [data-theme="dark"] .mc-badge.b-mod  { background: #3d2a08; color: #FAC775; }
   [data-theme="dark"] .mc-badge.b-low  { background: #1e3808; color: #97C459; }
   [data-theme="dark"] .chip-high { background: #3d1212; color: #F09595; }
-  [data-theme="dark"] .chip-mod  { background: #3d2a08; color: #FAC775; }
   [data-theme="dark"] .chip-low  { background: #1e3808; color: #97C459; }
   [data-theme="dark"] .pill.active     { background: #2c0e0e; border-color: #F09595; color: #F09595; }
   [data-theme="dark"] .pill.protective { background: #182808; border-color: #97C459; color: #97C459; }
@@ -215,10 +215,11 @@
   [data-theme="dark"] .toggle-btn:hover,
   [data-theme="dark"] .toggle-btn.active { background: #0c2238; border-color: #85B7EB; color: #85B7EB; }
   [data-theme="dark"] .mdc-risk-pill.rp-high { background: #3d1212; color: #F09595; }
-  [data-theme="dark"] .mdc-risk-pill.rp-mod  { background: #3d2a08; color: #FAC775; }
   [data-theme="dark"] .mdc-risk-pill.rp-low  { background: #1e3808; color: #97C459; }
   [data-theme="dark"] .mobile-tab.active { background: var(--blue-bg); color: var(--blue); border-color: var(--blue); }
   [data-theme="dark"] .bottom-action-bar { background: rgba(17,17,16,0.95); border-top-color: rgba(255,255,255,0.08); }
+  [data-theme="dark"] .consensus-card.c-orange { background: #2c1a0e; border-color: #F0A070; }
+  [data-theme="dark"] .consensus-card.c-orange .consensus-verdict { color: #F0A070; }
 
   /* ── Base ─────────────────────────────────────────────────────── */
   body {
@@ -510,38 +511,14 @@
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
-  .models-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .85rem 1.1rem .75rem;
-    cursor: pointer;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    transition: background .15s;
-  }
-  .models-card-header:active { background: var(--surface2); }
   .models-card-title {
     font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .07em;
     color: var(--hint);
+    padding: .85rem 1.1rem .5rem;
   }
-  .models-card-chev {
-    font-size: 11px;
-    color: var(--hint);
-    transition: transform .25s;
-    flex-shrink: 0;
-  }
-  .models-card.mc-open .models-card-chev { transform: rotate(180deg); }
-  .models-card-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .3s ease;
-  }
-  .models-card.mc-open .models-card-body { max-height: 1200px; }
 
   /* One row per model */
   .model-row {
@@ -977,7 +954,31 @@
   .mdt-disclaimer-body { font-size: 11px; color: var(--muted); line-height: 1.6; }
   .mdt-disclaimer-body strong { color: var(--text); font-weight: 500; }
 
-  /* ── GitHub FAB ─────────────────────────────────────────────── */
+  /* ── Consensus card color variants ─────────────────────────── */
+  .consensus-card.c-green  { background: var(--green-bg);  border-color: rgba(59,109,17,.25); }
+  .consensus-card.c-yellow { background: var(--amber-bg);  border-color: rgba(133,79,11,.25); }
+  .consensus-card.c-orange { background: #FDF0E6;          border-color: rgba(139,69,19,.25); }
+  .consensus-card.c-red    { background: var(--red-bg);    border-color: rgba(163,45,45,.25); }
+  .consensus-card.c-green  .consensus-verdict { color: var(--green); }
+  .consensus-card.c-yellow .consensus-verdict { color: var(--amber); }
+  .consensus-card.c-orange .consensus-verdict { color: var(--orange); }
+  .consensus-card.c-red    .consensus-verdict { color: var(--red); }
+  .consensus-note {
+    margin-top: .6rem;
+    font-size: 11.5px;
+    color: var(--muted);
+    padding-top: .55rem;
+    border-top: 0.5px solid var(--border);
+    line-height: 1.6;
+  }
+
+  /* ── Collapsible models card ────────────────────────────────── */
+  .models-card-collapsible .mdt-body { border-top: 0.5px solid transparent; }
+  .models-card-collapsible.expanded .mdt-body { border-top-color: var(--border); }
+  .models-card-collapsible .mdt-body-inner { padding: 0; }
+  .models-card-collapsible.expanded .mdt-body-inner { padding: 0; }
+
+
   .github-fab {
     position: fixed;
     bottom: calc(var(--bottom-bar) + .75rem);
@@ -1371,15 +1372,13 @@ const TRANSLATIONS = {
     guideResultTitle: 'Result Interpretation',
     guideInfoTitle: 'Important Information',
     // results (dynamic)
-    riskHigh: 'High Risk', riskMod: 'Moderate Risk', riskLow: 'Low Risk',
-    verdictHigh: 'High Probability of Hemorrhagic Stroke',
-    verdictMod: 'Moderate Probability of Hemorrhagic Stroke',
-    verdictLow: 'Low Probability of Hemorrhagic Stroke',
-    descHigh: 'Multiple models indicate a probability exceeding their safety thresholds. Findings are highly consistent with an acute hemorrhagic event. Urgent non-contrast CT imaging and neurological consultation are strongly indicated.',
-    descMod: 'Model predictions are discordant or borderline, with at least one model exceeding its safety threshold. Clinical correlation with patient history and expedited neuroimaging are required to definitively rule out hemorrhage.',
-    descLow: 'All models estimate the probability well below their respective safety thresholds. While hemorrhage is statistically less likely, standard acute stroke protocols and neuroimaging must still be followed.',
+    riskHigh: 'High Risk', riskLow: 'Low Risk',
+    verdictAllLow: '🟢 Low Risk: All models indicate low risk. LR securely supports rule-out, RF confirms non-hemorrhage, and XGBoost aligns with this low-risk assessment.',
+    verdictBorderline: '🟡 Borderline Risk (XGBoost Alert): The primary models (LR and RF) indicate low risk, safely supporting rule-out. However, XGBoost exceeded its threshold (which may be due to its known overfitting limitation). Clinical vigilance is advised.',
+    verdictConflict: '🟠 Conflicting Results: The models do not align (only one model indicates low risk). For maximum safety, it is recommended to manage the patient with a \'High Risk\' precaution and rely closely on clinical presentation.',
+    verdictHigh: '🔴 High Risk: The ensemble assessment indicates a risk of Hemorrhagic Stroke. Please prioritize this patient, manage resources, and prepare for safe transfer.',
+    clinicalNote: '💡 Clinical Note: This decision-support tool does not replace a CT scan.',
     clinicalConsensus: 'Clinical consensus',
-    avgProb: 'Average probability',
     modelsAboveThresh: 'Models above threshold',
     modelPredTitle: 'Model predictions vs clinical threshold',
     thresh: 'thresh',
@@ -1453,15 +1452,13 @@ const TRANSLATIONS = {
     guideHowTitle: 'วิธีการใช้งาน',
     guideResultTitle: 'การแปลผลลัพธ์',
     guideInfoTitle: 'ข้อมูลสำคัญ',
-    riskHigh: 'ความเสี่ยงสูง', riskMod: 'ความเสี่ยงปานกลาง', riskLow: 'ความเสี่ยงต่ำ',
-    verdictHigh: 'มีความเป็นไปได้สูงที่จะเป็นภาวะเลือดออกในสมอง',
-    verdictMod: 'มีความเป็นไปได้ก้ำกึ่งต่อภาวะเลือดออกในสมอง',
-    verdictLow: 'มีความเป็นไปได้ต่ำที่จะเป็นภาวะเลือดออกในสมอง',
-    descHigh: 'ผลลัพธ์จากหลายโมเดลบ่งชี้ค่าความน่าจะเป็นที่สูงกว่าเกณฑ์ตัดสินใจทางคลินิก สอดคล้องกับภาวะเลือดออกในสมองเฉียบพลัน ข้อแนะนำ: ควรพิจารณาส่งตรวจ Non-contrast CT brain ทันทีและปรึกษาแพทย์เฉพาะทาง',
-    descMod: 'ผลการทำนายค่อนข้างขัดแย้งหรืออยู่ในระดับก้ำกึ่ง โดยมีอย่างน้อย 1 โมเดลที่ค่าความน่าจะเป็นเกินเกณฑ์ตัดสินใจ ข้อแนะนำ: ต้องอาศัยประวัติทางคลินิกอย่างละเอียดร่วมกับการพิจารณาส่งภาพถ่ายรังสีเพื่อแยกแยะโรค',
-    descLow: 'ทั้งสามโมเดลประเมินค่าความน่าจะเป็นต่ำกว่าเกณฑ์ความปลอดภัยอย่างชัดเจน ในทางสถิติมีความเป็นไปได้ต่ำ ข้อแนะนำ: ดำเนินการประเมินและดูแลรักษาตามมาตรฐานผู้ป่วยโรคหลอดเลือดสมองเฉียบพลัน และส่งภาพถ่ายรังสีตามปกติ',
+    riskHigh: 'ความเสี่ยงสูง', riskLow: 'ความเสี่ยงต่ำ',
+    verdictAllLow: '🟢 ความเสี่ยงต่ำ (Low Risk): ผลการประเมินแบบผสมผสานบ่งชี้ความเสี่ยงต่ำ โมเดล LR เหมาะสำหรับคัดผู้ป่วยออก (Rule-out) อย่างปลอดภัย ร่วมกับ RF ที่ช่วยยืนยันผลลบ และ XGBoost สนับสนุนไปในทิศทางเดียวกัน',
+    verdictBorderline: '🟡 ความเสี่ยงก้ำกึ่ง (Borderline/XGBoost Alert): โมเดลหลัก (LR และ RF) ประเมินความเสี่ยงต่ำ ซึ่งสามารถคัดผู้ป่วยออกได้อย่างปลอดภัย อย่างไรก็ตาม โมเดล XGBoost ประเมินค่าสูงกว่าเกณฑ์ (อาจเกิดจากปัญหา Overfitting ของโมเดล) แพทย์ควรใช้ดุลยพินิจทางคลินิกประกอบการเฝ้าระวัง',
+    verdictConflict: '🟠 ผลลัพธ์ขัดแย้งกัน (Conflicting Results): แบบจำลองมีความเห็นไม่สอดคล้องกัน (มีเพียงโมเดลเดียวที่ประเมินว่าความเสี่ยงต่ำ) เพื่อความปลอดภัยสูงสุด แนะนำให้แพทย์พิจารณาผู้ป่วยเสมือนกลุ่ม \'ความเสี่ยงสูง\' ไว้ก่อน และตัดสินใจร่วมกับอาการทางคลินิกอย่างใกล้ชิด',
+    verdictHigh: '🔴 ความเสี่ยงสูง (High Risk): ผลการประเมินพบความเสี่ยงหลอดเลือดสมองแตก (Hemorrhagic Stroke) แพทย์ควรพิจารณาจัดลำดับความสำคัญ บริหารทรัพยากร และเตรียมดำเนินการส่งต่อผู้ป่วย',
+    clinicalNote: '💡 หมายเหตุทางคลินิก: เครื่องมือสนับสนุนการตัดสินใจนี้ ไม่สามารถทดแทนการตรวจด้วย CT scan ได้',
     clinicalConsensus: 'ผลสรุปทางคลินิก (Ensemble Consensus)',
-    avgProb: 'ความน่าจะเป็นเฉลี่ย (Average probability)',
     modelsAboveThresh: 'จำนวนโมเดลที่เกินเกณฑ์วินิจฉัย',
     modelPredTitle: 'การประเมินความน่าจะเป็นเทียบกับเกณฑ์ตัดสินใจ',
     thresh: 'เกณฑ์',
@@ -1498,12 +1495,12 @@ const GUIDE_CONTENT = {
     resultTitle: 'Result Interpretation',
     infoTitle: 'Important Information',
     how: `
-      <div class="info-step"><span class="info-step-num">1</span><span class="info-step-text"><strong>Input Clinical Parameters:</strong> Enter the patient's age, Systolic Blood Pressure (SBP), Glasgow Coma Scale (GCS) score, lowest motor power grade (0–5), and time since symptom onset.</span></div>
+      <div class="info-step"><span class="info-step-num">1</span><span class="info-step-text"><strong>Input Clinical Parameters:</strong> Enter the patient\'s age, Systolic Blood Pressure (SBP), Glasgow Coma Scale (GCS) score, lowest motor power grade (0–5), and time since symptom onset.</span></div>
       <div class="info-step"><span class="info-step-num">2</span><span class="info-step-text"><strong>Select Medical History:</strong> Indicate known comorbidities and risk factors, including hypertension, diabetes mellitus, prior stroke, atherosclerosis risk, bleeding diathesis, dyslipidemia, smoking, and alcohol consumption.</span></div>
       <div class="info-step"><span class="info-step-num">3</span><span class="info-step-text"><strong>Record Neurological Deficits:</strong> Select presenting clinical signs from the physical examination, such as altered level of consciousness, limb weakness, aphasia, sensory deficits, facial palsy, headache, or visual/vestibular disturbances.</span></div>
       <div class="info-step"><span class="info-step-num">4</span><span class="info-step-text"><strong>Execute Risk Assessment:</strong> Click <strong>"Execute Risk Assessment →"</strong> to process the data simultaneously through all three machine learning models (Logistic Regression, Random Forest, XGBoost).</span></div>
       <div class="info-step"><span class="info-step-num">5</span><span class="info-step-text"><strong>Interpret Findings:</strong> Review the "Risk Assessment" tab for the individual model probabilities, ensemble clinical consensus, active risk factor summary, and detailed performance metrics.</span></div>
-      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>Clear Data:</strong> Use <strong>"Clear Clinical Data"</strong> to clear the current patient's data and begin a new assessment.</span></div>`,
+      <div class="info-step"><span class="info-step-num">6</span><span class="info-step-text"><strong>Clear Data:</strong> Use <strong>"Clear Clinical Data"</strong> to clear the current patient\'s data and begin a new assessment.</span></div>`,
     result: `
       <h4>Ensemble Clinical Consensus</h4>
       <p>The overall risk stratification is evaluated using a 4-step algorithm based on model concordance:</p>
@@ -1521,7 +1518,7 @@ const GUIDE_CONTENT = {
       </ul>
       <h4>Risk Classification Criteria</h4>
       <ul>
-        <li><span class="ibadge ibadge-high">High Risk</span> — Predicted probability is ≥ the model's decision threshold.</li>
+        <li><span class="ibadge ibadge-high">High Risk</span> — Predicted probability is ≥ the model\'s decision threshold.</li>
         <li><span class="ibadge ibadge-low">Low Risk</span> — Predicted probability remains &lt; the decision threshold.</li>
       </ul>
       <h4>Performance Metrics</h4>
@@ -1584,7 +1581,7 @@ const GUIDE_CONTENT = {
       <div class="info-note-box">⚠ <strong>คำเตือน: สำหรับใช้ในงานวิจัยเท่านั้น</strong> เครื่องมือนี้พัฒนาขึ้นเพื่อประกอบการใช้ดุลยพินิจทางคลินิก ไม่สามารถใช้ทดแทนการประเมินจากแพทย์ได้ การตัดสินใจของแพทย์ผู้ให้การรักษาถือเป็นที่สิ้นสุดเสมอ</div>`
   }
 };
- 
+
 function renderGuide() {
   const lang = currentLang;
   const g = GUIDE_CONTENT[lang] || GUIDE_CONTENT.en;
@@ -1660,11 +1657,6 @@ function toggleTheme() {
   html.setAttribute('data-theme', isDark ? 'light' : 'dark');
   btn.textContent = isDark ? '☽ Dark' : '☀ Light';
   localStorage.setItem('theme', isDark ? 'light' : 'dark');
-  // Re-render results to update consensus card background for new theme
-  const panel = document.getElementById('results-panel');
-  if (panel && !panel.querySelector('.placeholder-card')) {
-    runPrediction();
-  }
 }
 (function() {
   const saved = localStorage.getItem('theme') || 'light';
@@ -1830,45 +1822,32 @@ function runPrediction() {
   const lrR  = classify(lrP,  THRESH.lr);
   const rfR  = classify(rfP,  THRESH.rf);
   const xgbR = classify(xgbP, THRESH.xgb);
-  const avgP = (lrP + rfP + xgbP) / 3;
+  const highN = [lrR, rfR, xgbR].filter(r => r === 'high').length;
 
-  const RISK_LABELS = { high: t('riskHigh'), mod: t('riskMod'), low: t('riskLow') };
+  const RISK_LABELS = { high: t('riskHigh'), low: t('riskLow') };
 
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  // 4-condition ensemble consensus (evaluated top-to-bottom)
+  let verdictText, consensusClass;
+  const lrHigh  = lrR  === 'high';
+  const rfHigh  = rfR  === 'high';
+  const xgbHigh = xgbR === 'high';
 
-  const clinicalNote = currentLang === 'th'
-    ? '💡 หมายเหตุทางคลินิก: เครื่องมือสนับสนุนการตัดสินใจนี้ ไม่สามารถทดแทนการวินิจฉัยด้วย CT scan ได้'
-    : '💡 Clinical Note: This decision-support tool does not replace a CT scan.';
-
-  let consensusBg, consensusText;
-
-  // Case 1: All Low
-  if (lrR === 'low' && rfR === 'low' && xgbR === 'low') {
-    consensusBg = isDark ? '#152608' : '#eef7e8';
-    consensusText = currentLang === 'th'
-      ? '🟢 ความเสี่ยงต่ำ (Low Risk): ผลประเมินสอดคล้องกันว่าความเสี่ยงต่ำ โมเดลหลัก (LR) สนับสนุนการคัดผู้ป่วยออก (Rule-out) ได้อย่างปลอดภัย โมเดลที่เหลือประเมินสอดคล้องกัน'
-      : '🟢 Low Risk: All models indicate low risk. LR securely supports rule-out. RF and XGBoost align with this low-risk assessment.';
-  }
-  // Case 2: Only XGBoost high
-  else if (lrR === 'low' && rfR === 'low' && xgbR === 'high') {
-    consensusBg = isDark ? '#262008' : '#fefae8';
-    consensusText = currentLang === 'th'
-      ? '🟡 ความเสี่ยงก้ำกึ่ง (Borderline Risk): โมเดลหลัก (LR และ RF) บ่งชี้ความเสี่ยงต่ำ (สนับสนุน Rule-out) แต่ XGBoost มีค่าเกินเกณฑ์ แนะนำให้ใช้ดุลยพินิจทางคลินิก (Clinical correlation) ประกอบการเฝ้าระวัง'
-      : '🟡 Borderline Risk: The primary models (LR and RF) indicate low risk, safely supporting rule-out. However, XGBoost exceeded its threshold. Clinical correlation and vigilance are advised.';
-  }
-  // Case 3: Conflicting — exactly one of LR or RF is low, others >= threshold
-  else if ((lrR === 'low') !== (rfR === 'low') && xgbR === 'high') {
-    consensusBg = isDark ? '#281808' : '#fff3e8';
-    consensusText = currentLang === 'th'
-      ? '🟠 ผลลัพธ์ขัดแย้ง (Conflicting Results): แบบจำลองไม่มีความสอดคล้องกัน เพื่อความปลอดภัยสูงสุดของผู้ป่วย แนะนำให้เฝ้าระวังเทียบเท่ากลุ่ม "ความเสี่ยงสูง" (High-risk precaution) และพิจารณาอาการทางคลินิกอย่างใกล้ชิด'
-      : '🟠 Conflicting Results: The models do not align. For maximum safety, it is recommended to manage the patient with a "High Risk" precaution and rely closely on clinical presentation.';
-  }
-  // Case 4: High Risk (all other combinations)
-  else {
-    consensusBg = isDark ? '#280808' : '#fdeaea';
-    consensusText = currentLang === 'th'
-      ? '🔴 ความเสี่ยงสูง (High Risk): ผลการประเมินบ่งชี้ความเสี่ยงต่อภาวะเลือดออกในสมอง (Hemorrhagic Stroke) สูงกว่าเกณฑ์ แพทย์ควรพิจารณาเตรียมพร้อมส่งตรวจทางรังสีวิทยาและบริหารจัดการทรัพยากร'
-      : '🔴 High Risk: The ensemble assessment indicates a risk of Hemorrhagic Stroke. Please prioritize this patient, manage resources, and prepare for urgent neuroimaging.';
+  if (!lrHigh && !rfHigh && !xgbHigh) {
+    // Condition 1: All Low Risk
+    verdictText   = t('verdictAllLow');
+    consensusClass = 'c-green';
+  } else if (!lrHigh && !rfHigh && xgbHigh) {
+    // Condition 2: Only XGBoost is High
+    verdictText   = t('verdictBorderline');
+    consensusClass = 'c-yellow';
+  } else if ([lrHigh, rfHigh, xgbHigh].filter(Boolean).length === 2 && [!lrHigh, !rfHigh, !xgbHigh].filter(Boolean).length === 1) {
+    // Condition 3: Conflicting — exactly one is low
+    verdictText   = t('verdictConflict');
+    consensusClass = 'c-orange';
+  } else {
+    // Condition 4: High Risk — majority or all are high (covers: all high, or LR/RF high regardless of XGB)
+    verdictText   = t('verdictHigh');
+    consensusClass = 'c-red';
   }
 
   const fl = t('factorLabels');
@@ -1934,35 +1913,46 @@ function runPrediction() {
   const panel = document.getElementById('results-panel');
   panel.innerHTML = `
 
-    <div class="models-card mc-open" id="models-card">
-      <div class="models-card-header" onclick="toggleModelsCard()" role="button">
-        <div class="models-card-title">${t('modelPredTitle')}</div>
-        <span class="models-card-chev">▾</span>
+    <div class="models-card models-card-collapsible expanded" id="models-card">
+      <div class="mdt-toggle-header" onclick="toggleModelsCard()" role="button" aria-expanded="true" aria-controls="models-body">
+        <div class="mdt-header-left">
+          <span class="metrics-label">${t('modelPredTitle')}</span>
+          <span class="mdt-badge">${t('modelsRun')}</span>
+        </div>
+        <span class="mdt-chevron" style="transform:rotate(180deg)">▾</span>
       </div>
-      <div class="models-card-body">
-      ${MODELS.map((m, i) => {
-        const gClass = ['gf-lr','gf-rf','gf-xgb'][i];
-        const gColor = ['#185FA5','#3B6D11','#854F0B'][i];
-        return `
-        <div class="model-row">
-          <div class="mr-left">
-            <div class="mr-prob c-${m.risk}">${pctPlain(m.prob)}%</div>
-            <span class="mr-badge b-${m.risk}">${RISK_LABELS[m.risk]}</span>
-            <div class="mr-name" style="color:${gColor}">${m.name}</div>
-            <div class="mr-engine">${m.engine}</div>
-          </div>
-          <div class="mr-right">
-            <div class="mr-gauge-track">
-              <div class="mr-gauge-fill ${gClass}" style="width:${pctPlain(m.prob)}%"></div>
-            </div>
-            <div class="mr-thresh-row">
-              <div class="mr-thresh-tick" style="left:${(m.thresh*100).toFixed(1)}%"></div>
-              <span class="mr-thresh-label" style="left:${(m.thresh*100).toFixed(1)}%">${t('thresh')} ${(m.thresh*100).toFixed(1)}%</span>
-            </div>
-          </div>
-        </div>`;
-      }).join('')}
+      <div class="mdt-body" id="models-body" style="grid-template-rows:1fr;border-top-color:var(--border)" role="region">
+        <div class="mdt-body-inner" style="padding:0">
+          ${MODELS.map((m, i) => {
+            const gClass = ['gf-lr','gf-rf','gf-xgb'][i];
+            const gColor = ['#185FA5','#3B6D11','#854F0B'][i];
+            return `
+            <div class="model-row">
+              <div class="mr-left">
+                <div class="mr-prob c-${m.risk}">${pctPlain(m.prob)}%</div>
+                <span class="mr-badge b-${m.risk}">${RISK_LABELS[m.risk]}</span>
+                <div class="mr-name" style="color:${gColor}">${m.name}</div>
+                <div class="mr-engine">${m.engine}</div>
+              </div>
+              <div class="mr-right">
+                <div class="mr-gauge-track">
+                  <div class="mr-gauge-fill ${gClass}" style="width:${pctPlain(m.prob)}%"></div>
+                </div>
+                <div class="mr-thresh-row">
+                  <div class="mr-thresh-tick" style="left:${(m.thresh*100).toFixed(1)}%"></div>
+                  <span class="mr-thresh-label" style="left:${(m.thresh*100).toFixed(1)}%">${t('thresh')} ${(m.thresh*100).toFixed(1)}%</span>
+                </div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
       </div>
+    </div>
+
+    <div class="consensus-card ${consensusClass}">
+      <div class="consensus-label">${t('clinicalConsensus')}</div>
+      <div class="consensus-verdict">${verdictText}</div>
+      <div class="consensus-note">${t('clinicalNote')}</div>
     </div>
 
     <div class="factors-card">
@@ -2056,13 +2046,22 @@ function runPrediction() {
   }
 }
 
-// ── Toggle Models Card ────────────────────────────────────────────
+// ── Toggle Model Detail panel ─────────────────────────────────────
 function toggleModelsCard() {
-  const card = document.getElementById('models-card');
-  if (card) card.classList.toggle('mc-open');
+  const card   = document.getElementById('models-card');
+  if (!card) return;
+  const isExp  = card.classList.toggle('expanded');
+  const header = card.querySelector('.mdt-toggle-header');
+  const chev   = card.querySelector('.mdt-chevron');
+  const body   = document.getElementById('models-body');
+  if (header) header.setAttribute('aria-expanded', isExp);
+  if (chev)   chev.style.transform = isExp ? 'rotate(180deg)' : '';
+  if (body) {
+    body.style.gridTemplateRows = isExp ? '1fr' : '0fr';
+    body.style.borderTopColor   = isExp ? 'var(--border)' : 'transparent';
+  }
 }
 
-// ── Toggle Model Detail panel ─────────────────────────────────────
 function toggleModelDetail() {
   const card   = document.getElementById('metrics-card');
   const header = card.querySelector('.mdt-toggle-header');
