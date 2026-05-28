@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stroke Hemorrhage Risk Predictor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -130,7 +130,7 @@
   .info-acc-inner {
     padding: .75rem .85rem;
     font-size: 12.5px;
-    line-height: 1.65;
+    line-height: 1.6;
     color: var(--muted);
   }
 
@@ -223,8 +223,9 @@
 
   /* ── Base ─────────────────────────────────────────────────────── */
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 15px;
+    line-height: 1.5;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -236,7 +237,7 @@
   html[lang="th"] select,
   html[lang="th"] label,
   html[lang="th"] * {
-    font-family: 'Noto Sans Thai', sans-serif;
+    font-family: 'Prompt', sans-serif;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -262,7 +263,7 @@
     z-index: 100;
   }
   .page-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 16px;
     font-weight: 400;
     color: var(--text);
@@ -272,7 +273,7 @@
 
   #theme-btn, #lang-btn {
     padding: 6px 12px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 11px;
     font-weight: 500;
     border: 0.5px solid var(--border2);
@@ -318,7 +319,7 @@
     padding: 5px 14px;
     font-size: 12px;
     font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     border: 0.5px solid var(--border2);
     border-radius: 99px;
     cursor: pointer;
@@ -389,7 +390,7 @@
     width: 100%;
     padding: 9px 10px;
     font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     border: 0.5px solid var(--border2);
     border-radius: var(--radius);
     background: var(--surface2);
@@ -426,7 +427,7 @@
     padding: 8px 4px;
     font-size: 11px;
     font-weight: 500;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     border: 0.5px solid var(--border2);
     border-radius: var(--radius);
     cursor: pointer;
@@ -461,7 +462,7 @@
   .predict-btn {
     flex: 1;
     padding: 13px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 14px;
     font-weight: 500;
     border: none;
@@ -477,7 +478,7 @@
   .predict-btn:active { transform: scale(.98); opacity: .9; }
   .reset-btn {
     padding: 13px 16px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 12px;
     border: 0.5px solid var(--border2);
     border-radius: var(--radius);
@@ -535,7 +536,7 @@
   /* Left: big number + badge + name */
   .mr-left { display: flex; flex-direction: column; gap: 3px; }
   .mr-prob {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1;
@@ -627,12 +628,12 @@
     margin-bottom: .4rem;
   }
   .consensus-verdict {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 18px;
     font-weight: 400;
     margin-bottom: .4rem;
   }
-  .consensus-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .consensus-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
   .avg-prob {
     margin-top: .7rem;
     font-size: 11px;
@@ -769,7 +770,7 @@
     margin-bottom: 4px;
   }
   .auroc-tile-val {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 20px;
     font-weight: 400;
     line-height: 1;
@@ -821,7 +822,7 @@
   .mdc-prob-row { margin-bottom: .65rem; }
   .mdc-prob-label { font-size: 10px; color: var(--hint); margin-bottom: 2px; }
   .mdc-prob-val {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Prompt', sans-serif;
     font-size: 26px;
     font-weight: 400;
     line-height: 1;
@@ -1095,7 +1096,7 @@
     .predict-btn-inline {
       width: 100%;
       padding: 11px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Prompt', sans-serif;
       font-size: 14px;
       font-weight: 500;
       border: none;
@@ -1111,7 +1112,7 @@
     .reset-btn-inline {
       width: 100%;
       padding: 8px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Prompt', sans-serif;
       font-size: 12px;
       border: 0.5px solid var(--border);
       border-radius: var(--radius);
@@ -1373,11 +1374,11 @@ const TRANSLATIONS = {
     guideInfoTitle: 'Important Information',
     // results (dynamic)
     riskHigh: 'High Risk', riskLow: 'Low Risk',
-    verdictAllLow: '🟢 Low Risk: All models indicate low risk. LR securely supports rule-out, RF confirms non-hemorrhage, and XGBoost aligns with this low-risk assessment.',
-    verdictBorderline: '🟡 Borderline Risk (XGBoost Alert): The primary models (LR and RF) indicate low risk, safely supporting rule-out. However, XGBoost exceeded its threshold (which may be due to its known overfitting limitation). Clinical vigilance is advised.',
-    verdictConflict: '🟠 Conflicting Results: The models do not align (only one model indicates low risk). For maximum safety, it is recommended to manage the patient with a \'High Risk\' precaution and rely closely on clinical presentation.',
-    verdictHigh: '🔴 High Risk: The ensemble assessment indicates a risk of Hemorrhagic Stroke. Please prioritize this patient, manage resources, and prepare for safe transfer.',
-    clinicalNote: '💡 Clinical Note: This decision-support tool does not replace a CT scan.',
+    verdictAllLow: '<strong>🟢 Low Risk:</strong> All models indicate low risk. LR securely supports rule-out, RF confirms non-hemorrhage, and XGBoost aligns with this low-risk assessment.',
+    verdictBorderline: '<strong>🟡 Borderline Risk (XGBoost Alert):</strong> The primary models (LR and RF) indicate low risk, safely supporting rule-out. However, XGBoost exceeded its threshold (which may be due to its known overfitting limitation). Clinical vigilance is advised.',
+    verdictConflict: '<strong>🟠 Conflicting Results:</strong> The models do not align (only one model indicates low risk). For maximum safety, it is recommended to manage the patient with a \'High Risk\' precaution and rely closely on clinical presentation.',
+    verdictHigh: '<strong>🔴 High Risk:</strong> The ensemble assessment indicates a risk of Hemorrhagic Stroke. Please prioritize this patient, manage resources, and prepare for safe transfer.',
+    clinicalNote: '<strong>💡 Clinical Note:</strong> This decision-support tool does not replace a CT scan.',
     clinicalConsensus: 'Clinical consensus',
     modelsAboveThresh: 'Models above threshold',
     modelPredTitle: 'Model predictions vs clinical threshold',
@@ -1453,11 +1454,11 @@ const TRANSLATIONS = {
     guideResultTitle: 'การแปลผลลัพธ์',
     guideInfoTitle: 'ข้อมูลสำคัญ',
     riskHigh: 'ความเสี่ยงสูง', riskLow: 'ความเสี่ยงต่ำ',
-    verdictAllLow: '🟢 ความเสี่ยงต่ำ (Low Risk): ผลการประเมินแบบผสมผสานบ่งชี้ความเสี่ยงต่ำ โมเดล LR เหมาะสำหรับคัดผู้ป่วยออก (Rule-out) อย่างปลอดภัย ร่วมกับ RF ที่ช่วยยืนยันผลลบ และ XGBoost สนับสนุนไปในทิศทางเดียวกัน',
-    verdictBorderline: '🟡 ความเสี่ยงก้ำกึ่ง (Borderline/XGBoost Alert): โมเดลหลัก (LR และ RF) ประเมินความเสี่ยงต่ำ ซึ่งสามารถคัดผู้ป่วยออกได้อย่างปลอดภัย อย่างไรก็ตาม โมเดล XGBoost ประเมินค่าสูงกว่าเกณฑ์ (อาจเกิดจากปัญหา Overfitting ของโมเดล) แพทย์ควรใช้ดุลยพินิจทางคลินิกประกอบการเฝ้าระวัง',
-    verdictConflict: '🟠 ผลลัพธ์ขัดแย้งกัน (Conflicting Results): แบบจำลองมีความเห็นไม่สอดคล้องกัน (มีเพียงโมเดลเดียวที่ประเมินว่าความเสี่ยงต่ำ) เพื่อความปลอดภัยสูงสุด แนะนำให้แพทย์พิจารณาผู้ป่วยเสมือนกลุ่ม \'ความเสี่ยงสูง\' ไว้ก่อน และตัดสินใจร่วมกับอาการทางคลินิกอย่างใกล้ชิด',
-    verdictHigh: '🔴 ความเสี่ยงสูง (High Risk): ผลการประเมินพบความเสี่ยงหลอดเลือดสมองแตก (Hemorrhagic Stroke) แพทย์ควรพิจารณาจัดลำดับความสำคัญ บริหารทรัพยากร และเตรียมดำเนินการส่งต่อผู้ป่วย',
-    clinicalNote: '💡 หมายเหตุทางคลินิก: เครื่องมือสนับสนุนการตัดสินใจนี้ ไม่สามารถทดแทนการตรวจด้วย CT scan ได้',
+    verdictAllLow: '<strong>🟢 ความเสี่ยงต่ำ (Low Risk):</strong> ผลการประเมินแบบผสมผสานบ่งชี้ความเสี่ยงต่ำ โมเดล LR เหมาะสำหรับคัดผู้ป่วยออก (Rule-out) อย่างปลอดภัย ร่วมกับ RF ที่ช่วยยืนยันผลลบ และ XGBoost สนับสนุนไปในทิศทางเดียวกัน',
+    verdictBorderline: '<strong>🟡 ความเสี่ยงก้ำกึ่ง (Borderline/XGBoost Alert):</strong> โมเดลหลัก (LR และ RF) ประเมินความเสี่ยงต่ำ ซึ่งสามารถคัดผู้ป่วยออกได้อย่างปลอดภัย อย่างไรก็ตาม โมเดล XGBoost ประเมินค่าสูงกว่าเกณฑ์ (อาจเกิดจากปัญหา Overfitting ของโมเดล) แพทย์ควรใช้ดุลยพินิจทางคลินิกประกอบการเฝ้าระวัง',
+    verdictConflict: '<strong>🟠 ผลลัพธ์ขัดแย้งกัน (Conflicting Results):</strong> แบบจำลองมีความเห็นไม่สอดคล้องกัน (มีเพียงโมเดลเดียวที่ประเมินว่าความเสี่ยงต่ำ) เพื่อความปลอดภัยสูงสุด แนะนำให้แพทย์พิจารณาผู้ป่วยเสมือนกลุ่ม \'ความเสี่ยงสูง\' ไว้ก่อน และตัดสินใจร่วมกับอาการทางคลินิกอย่างใกล้ชิด',
+    verdictHigh: '<strong>🔴 ความเสี่ยงสูง (High Risk):</strong> ผลการประเมินพบความเสี่ยงหลอดเลือดสมองแตก (Hemorrhagic Stroke) แพทย์ควรพิจารณาจัดลำดับความสำคัญ บริหารทรัพยากร และเตรียมดำเนินการส่งต่อผู้ป่วย',
+    clinicalNote: '<strong>💡 หมายเหตุทางคลินิก:</strong> เครื่องมือสนับสนุนการตัดสินใจนี้ ไม่สามารถทดแทนการตรวจด้วย CT scan ได้',
     clinicalConsensus: 'ผลสรุปทางคลินิก (Ensemble Consensus)',
     modelsAboveThresh: 'จำนวนโมเดลที่เกินเกณฑ์วินิจฉัย',
     modelPredTitle: 'การประเมินความน่าจะเป็นเทียบกับเกณฑ์ตัดสินใจ',
