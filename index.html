@@ -1267,7 +1267,7 @@
             <div class="toggle-btn" data-key="bleeding_risk" data-i18n="fBleedingRisk">Bleeding Diathesis / Risk</div>
             <div class="toggle-btn" data-key="athero_risk" data-i18n="fAthero">Atherosclerosis Risk</div>
             <div class="toggle-btn" data-key="alcohol" data-i18n="fAlcohol">Active Alcohol Use</div>
-            <div class="toggle-btn" data-key="ht" data-i18n="fHT">History of Hypertension</div>
+            <div class="toggle-btn" data-key="ht" data-i18n="fHT">Hypertension</div>
             <div class="toggle-btn" data-key="dm" data-i18n="fDM">Diabetes Mellitus</div>
             <div class="toggle-btn" data-key="dlp" data-i18n="fDLP">Dyslipidemia</div>
             <div class="toggle-btn" data-key="cva" data-i18n="fCVA">Prior Stroke / TIA</div>
@@ -1349,7 +1349,7 @@ const TRANSLATIONS = {
     fBleedingRisk: 'Bleeding Diathesis / Risk',
     fAthero: 'Atherosclerosis Risk',
     fAlcohol: 'Active Alcohol Use',
-    fHT: 'History of Hypertension',
+    fHT: 'Hypertension',
     fDM: 'Diabetes Mellitus',
     fDLP: 'Dyslipidemia',
     fCVA: 'Prior Stroke / TIA',
@@ -1410,19 +1410,19 @@ const TRANSLATIONS = {
     resetPlaceholder: 'Input clinical parameters and select<br><strong>Execute Risk Assessment</strong> to generate the ensemble model comparison.',
   },
   th: {
-    pageTitle: 'ระบบประเมินความเสี่ยงโรคหลอดเลือดสมองแตก (Hemorrhagic Stroke)',
-    pageSub: 'ผู้ป่วยโรคหลอดเลือดสมองเฉียบพลัน · ระยะเวลาเกิดอาการ &lt; 72 ชั่วโมง · ประมวลผลร่วม 3 โมเดล (LR · RF · XGBoost)',
-    disclaimer: '⚠ <strong>ข้อจำกัดความรับผิดชอบทางคลินิก:</strong> สำหรับใช้ในงานวิจัยและสาธิตเท่านั้น ผลการประเมินไม่สามารถทดแทนการวินิจฉัยทางการแพทย์ได้ การตัดสินใจของแพทย์ผู้รักษาย่อมเป็นที่สิ้นสุดเสมอ',
+    pageTitle: 'Hemorrhagic Stroke Risk Predictor',
+    pageSub: 'ระบบประเมินความเสี่ยงโรคหลอดเลือดสมองชนิดหลอดเลือดแตก(Hemorrhagic Stroke) ในผู้ป่วยโรคหลอดเลือดสมองเฉียบพลัน · ระยะเวลาเกิดอาการ &lt; 72 ชั่วโมง · ประมวลผลร่วม 3 โมเดล (LR · RF · XGBoost)',
+    disclaimer: '⚠ <strong>หมายเหตุ:</strong> สำหรับใช้ในงานวิจัยและสาธิตเท่านั้น ผลการประเมินไม่สามารถทดแทนการวินิจฉัยทางการแพทย์ได้ ขึ้นกับการตัดสินใจของแพทย์ผู้รักษา',
     tabInput: 'ข้อมูลทางคลินิก',
     tabResults: 'ผลการประเมิน',
     panelTitle: 'พารามิเตอร์ทางคลินิกของผู้ป่วย',
     secVitals: 'สัญญาณชีพแรกรับและข้อมูลทั่วไป',
     labelAge: 'อายุ (ปี)',
-    labelSBP: 'ความดันโลหิตซิสโตลิกแรกรับ (mmHg)',
+    labelSBP: 'ความดันโลหิตตัวบน (mmHg)',
     labelGCS: 'ระดับความรู้สึกตัวแรกรับ (GCS score, 3–15)',
     labelMotor: 'ระดับกำลังกล้ามเนื้อส่วนที่อ่อนแรงที่สุด (Motor grade, 0–5)',
-    labelOnset: 'ระยะเวลาตั้งแต่เริ่มมีอาการ (Onset window)',
-    onset0: '< 4.5 ชั่วโมง',
+    labelOnset: 'ระยะเวลาตั้งแต่เริ่มมีอาการ',
+    onset0: 'น้อยกว่า 4.5 ชั่วโมง',
     onset1: '4.5 – 24 ชั่วโมง',
     onset2: '24 – 48 ชั่วโมง',
     onset3: '48 – 72 ชั่วโมง',
@@ -1433,7 +1433,7 @@ const TRANSLATIONS = {
     fHT: 'โรคความดันโลหิตสูง (Hypertension)',
     fDM: 'โรคเบาหวาน (Diabetes Mellitus)',
     fDLP: 'ภาวะไขมันในเลือดสูง (Dyslipidemia)',
-    fCVA: 'ประวัติโรคหลอดเลือดสมอง / TIA เดิม',
+    fCVA: 'โรคหลอดเลือดสมอง / TIA เดิม',
     fCVD: 'โรคหัวใจและหลอดเลือด (CVD)',
     fSmoking: 'ประวัติสูบบุหรี่ (Active smoking)',
     secNeuro: 'อาการแสดงทางระบบประสาท',
@@ -1442,9 +1442,9 @@ const TRANSLATIONS = {
     fFacial: 'มุมปากตก / หน้าเบี้ยว (Facial palsy)',
     fAOC: 'ระดับความรู้สึกตัวเปลี่ยนแปลง (Altered consciousness)',
     fSensory: 'ความผิดปกติของการรับความรู้สึก (Sensory deficit)',
-    fAphasia: 'สูญเสียการสื่อความ (Aphasia)',
-    fHeadache: 'ปวดศีรษะเฉียบพลัน',
-    fOtherNeuro: 'การมองเห็นผิดปกติ / เดินเซ / เวียนศีรษะ',
+    fAphasia: 'พูดไม่ได้ (Aphasia)',
+    fHeadache: 'ปวดศีรษะ',
+    fOtherNeuro: 'มองเห็นผิดปกติ / เดินเซ / เวียนศีรษะ',
     btnRun: 'ประมวลผลความเสี่ยง →',
     btnReset: 'ล้างข้อมูลทางคลินิก',
     btnResetShort: 'ล้างข้อมูล',
@@ -1576,7 +1576,7 @@ const GUIDE_CONTENT = {
       <p>อาการแขนขาอ่อนแรงมีค่าสัมประสิทธิ์ในเชิงลบสำหรับทุกโมเดล เนื่องจากในชุดข้อมูลนี้ อาการดังกล่าวมีความสัมพันธ์กับโรคหลอดเลือดสมองขาดเลือด (Ischemic stroke) มากกว่า อาการนี้จึงส่งผลให้ค่าความน่าจะเป็นรวมลดลงเล็กน้อย แต่ไม่ได้แปลว่าไม่มีความเสี่ยง</p>
       <h4>ข้อจำกัดของเครื่องมือ</h4>
       <ul>
-        <li>ไม่สามารถใช้ทดแทนการตรวจเอกซเรย์คอมพิวเตอร์สมอง (CT Scan) ซึ่งเป็นมาตรฐานทองคำในการวินิจฉัย</li>
+        <li>ไม่สามารถใช้ทดแทนการตรวจเอกซเรย์คอมพิวเตอร์สมอง (CT Scan) ซึ่งเป็นมาตรฐานในการวินิจฉัยรักษา</li>
         <li>ยังไม่ผ่านการตรวจสอบความแม่นยำด้วยข้อมูลจากภายนอก (External validation) จำเป็นต้องมีการศึกษาทางคลินิกเพิ่มเติมก่อนนำไปใช้ในเวชปฏิบัติจริง</li>
       </ul>
       <div class="info-note-box">⚠ <strong>คำเตือน: สำหรับใช้ในงานวิจัยเท่านั้น</strong> เครื่องมือนี้พัฒนาขึ้นเพื่อประกอบการใช้ดุลยพินิจทางคลินิก ไม่สามารถใช้ทดแทนการประเมินจากแพทย์ได้ การตัดสินใจของแพทย์ผู้ให้การรักษาถือเป็นที่สิ้นสุดเสมอ</div>`
